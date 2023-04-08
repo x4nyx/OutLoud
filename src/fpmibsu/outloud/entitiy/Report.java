@@ -3,7 +3,8 @@ import fpmibsu.outloud.enumfiles.Status;
 
 public class Report {
     Integer id;
-    Integer creatorId;
+    User creator;
+    User helper;
     Status status;
     String text;
     String title;

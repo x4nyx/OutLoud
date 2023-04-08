@@ -2,9 +2,9 @@ package fpmibsu.outloud.entitiy;
 
 public class Track {
     Integer id;
-    Integer creatorId;
+    User creator;
     Integer date;
-    Integer genreId;
+    Genre genre;
     String name;
     Integer playsCount;
 }

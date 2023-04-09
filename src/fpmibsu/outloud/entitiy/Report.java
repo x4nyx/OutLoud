@@ -2,12 +2,60 @@ package fpmibsu.outloud.entitiy;
 import fpmibsu.outloud.enumfiles.Status;
 
 public class Report {
-    Integer id;
-    User creator;
-    User helper;
-    Status status;
-    String text;
-    String title;
+    private Integer id;
+    private User creator;
+    private User helper;
+    private Status status;
+    private String text;
+    private String title;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public User getHelper() {
+        return helper;
+    }
+
+    public void setHelper(User helper) {
+        this.helper = helper;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }
 
 

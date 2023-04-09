@@ -34,26 +34,26 @@ public class User {
     }
 
     public Integer getId() {
-        return id;
+        return this.id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getLogin() {
-        return login;
+        return this.login;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public Type getRole() {
-        return role;
+        return this.role;
     }
 
     public Boolean getConfirmation() {
-        return isConfirmed;
+        return this.isConfirmed;
     }
 }

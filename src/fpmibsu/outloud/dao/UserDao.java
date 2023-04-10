@@ -9,7 +9,9 @@ import fpmibsu.outloud.enumfiles.Type;
 
 public class UserDao extends AbstractController<User, Integer>{
     private static final String SQL_SELECT_ALL_USERS = 
-                                    "SELECT * FROM users";
+                                    "SELECT * FROM users;";
+    private static final String SQL_SELECT_ALL_ID =
+                                    "SELECT id FROM users;";
 
     @Override
     public List<User> findAll() throws DaoException {
@@ -44,26 +46,105 @@ public class UserDao extends AbstractController<User, Integer>{
 
     @Override
     public User findEntityById(Integer id) throws DaoException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findEntityById'");
+        User user = null;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionCreator.createConnection();
+            statement = connection.prepareStatement(SQL_SELECT_ALL_ID);
+            resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                if(resultSet.getInt("id") == id) {
+                    user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setName(resultSet.getString("name"));
+                    user.setLogin(resultSet.getString("login"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setRole(Type.valueOf(resultSet.getString("role")));
+                    user.setConfimation(resultSet.getBoolean("confirmation"));
+                    break;
+                }
+            }
+        } catch(SQLException exception) {
+            throw new DaoException(exception);
+        } finally {
+            try {
+                resultSet.close();
+                connection.close();
+                statement.close();
+            } catch(SQLException exception) {}
+        }
+        return user;
     }
 
     @Override
     public boolean delete(Integer id) throws DaoException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        Connection connection = null;
+        Statement statement = null;
+        try{
+            connection = ConnectionCreator.createConnection();
+            statement = connection.createStatement();
+            String sqlString = "DELETE FROM users WHERE id=" + id + ";";
+            statement.executeUpdate(sqlString);
+        } catch(SQLException exception) {
+            throw new DaoException(exception);
+        } finally {
+            try {
+                connection.close();
+                statement.close();
+            } catch(SQLException exception) {}
+        }
+        return true;
     }
 
     @Override
     public boolean create(User entity) throws DaoException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        Connection connection = null;
+        Statement statement = null;
+        try{
+            connection = ConnectionCreator.createConnection();
+            statement = connection.createStatement();
+            String sqlString = "INSER INTO users(id, name, login, password, role, isConfirmed) VALUES";
+            sqlString += entity.toString() + ";";            
+            statement.executeUpdate(sqlString);
+        } catch(SQLException exception) {
+            throw new DaoException(exception);
+        } finally {
+            try {
+                connection.close();
+                statement.close();
+            } catch(SQLException exception) {}
+        }
+        return true;
     }
     
     @Override
     public User update(User entity) throws DaoException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        User user = null;
+        Connection connection = null;
+        Statement statement = null;
+        try{
+            connection = ConnectionCreator.createConnection();
+            statement = connection.createStatement();
+            user = findEntityById(entity.getId());
+            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE users SET ");
+            sqlStringBuilder.append("name=").append(entity.getName()).append(", ");
+            sqlStringBuilder.append("login=").append(entity.getLogin()).append(", ");
+            sqlStringBuilder.append("password=").append(entity.getPassword()).append(", ");
+            sqlStringBuilder.append("role=").append(entity.getRole()).append(", ");
+            sqlStringBuilder.append("confirmation=").append(entity.getConfirmation());
+            sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
+            String sqlString = new String(sqlStringBuilder);           
+            statement.executeUpdate(sqlString);
+        } catch(SQLException exception) {
+            throw new DaoException(exception);
+        } finally {
+            try {
+                connection.close();
+                statement.close();
+            } catch(SQLException exception) {}
+        }
+        return user;
     }
-    
 }

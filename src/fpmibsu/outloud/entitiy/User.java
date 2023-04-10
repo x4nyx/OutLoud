@@ -56,4 +56,15 @@ public class User {
     public Boolean getConfirmation() {
         return this.isConfirmed;
     }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("(");
+        stringBuilder.append(id).append(", ");
+        stringBuilder.append(name).append(", ");
+        stringBuilder.append(login).append(", ");
+        stringBuilder.append(password).append(", ");
+        stringBuilder.append(role).append(", ");
+        stringBuilder.append(isConfirmed).append(")");
+        return new String(stringBuilder);
+    }
 }

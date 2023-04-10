@@ -3,12 +3,21 @@ package fpmibsu.outloud.entitiy;
 public class Post {
     private Integer id;
     private Group group;
+    private User creator;
     private Integer viewCount;
     private String text;
     private String title;
 
+    public User getCreator() {
+        return this.creator;
+    }
+
+    public void setUser(User creator) {
+        this.creator = creator;
+    }
+
     public Integer getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Integer id) {

@@ -57,8 +57,6 @@ public class User {
         return this.isConfirmed;
     }
 
-    // branch test
-
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("(");
         stringBuilder.append(id).append(", ");

@@ -12,7 +12,7 @@ public class Post {
         return this.creator;
     }
 
-    public void setUser(User creator) {
+    public void setCreator(User creator) {
         this.creator = creator;
     }
 

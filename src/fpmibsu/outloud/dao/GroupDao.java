@@ -7,6 +7,7 @@ import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 import fpmibsu.outloud.enumfiles.Type;
 
+//TO-DO
 public class GroupDao {
     private static final String SQL_SELECT_ALL_USERS = 
                                     "SELECT * FROM users;";

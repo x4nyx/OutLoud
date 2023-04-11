@@ -6,6 +6,7 @@ import java.sql.*;
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 
+
 public class GenreDao {
     private static final String SQL_SELECT_ALL_USERS = 
                                     "SELECT * FROM genres;";

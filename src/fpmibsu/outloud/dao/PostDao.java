@@ -6,7 +6,7 @@ import java.sql.*;
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 
-//TO-DO
+//TO-DO с
 public class PostDao {
     private static final String SQL_SELECT_ALL_USERS = 
                                     "SELECT * FROM posts;";

@@ -7,13 +7,12 @@ import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 import fpmibsu.outloud.enumfiles.Type;
 
-public class UserDao extends AbstractController<User, Integer>{
+public class UserDao {
     private static final String SQL_SELECT_ALL_USERS = 
                                     "SELECT * FROM users;";
     private static final String SQL_SELECT_ALL_ID =
                                     "SELECT id FROM users;";
-
-    @Override
+    
     public List<User> findAll() throws DaoException {
         List<User> users = new ArrayList<>();
         Connection connection = null;
@@ -44,7 +43,6 @@ public class UserDao extends AbstractController<User, Integer>{
         return users;
     }
 
-    @Override
     public User findEntityById(Integer id) throws DaoException {
         User user = null;
         Connection connection = null;
@@ -78,7 +76,6 @@ public class UserDao extends AbstractController<User, Integer>{
         return user;
     }
 
-    @Override
     public boolean delete(Integer id) throws DaoException {
         Connection connection = null;
         Statement statement = null;
@@ -98,7 +95,6 @@ public class UserDao extends AbstractController<User, Integer>{
         return true;
     }
 
-    @Override
     public boolean create(User entity) throws DaoException {
         Connection connection = null;
         Statement statement = null;
@@ -119,7 +115,6 @@ public class UserDao extends AbstractController<User, Integer>{
         return true;
     }
     
-    @Override
     public User update(User entity) throws DaoException {
         User user = null;
         Connection connection = null;

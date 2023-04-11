@@ -7,12 +7,13 @@ import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 import fpmibsu.outloud.enumfiles.Type;
 
-public class UserDao {
+public class GroupDao {
     private static final String SQL_SELECT_ALL_USERS = 
                                     "SELECT * FROM users;";
     private static final String SQL_SELECT_ALL_ID =
                                     "SELECT id FROM users;";
     
+    //TO-DO
     public static List<User> findAll() throws DaoException {
         List<User> users = new ArrayList<>();
         Connection connection = null;
@@ -43,8 +44,9 @@ public class UserDao {
         return users;
     }
 
-    public static User findEntityById(Integer id) throws DaoException {
-        User user = null;
+    //TO-DO
+    public static Group findEntityById(Integer id) throws DaoException {
+        Group group = null;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -54,13 +56,10 @@ public class UserDao {
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 if(resultSet.getInt("id") == id) {
-                    user = new User();
-                    user.setId(resultSet.getInt("id"));
-                    user.setName(resultSet.getString("name"));
-                    user.setLogin(resultSet.getString("login"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setRole(Type.valueOf(resultSet.getString("role")));
-                    user.setConfimation(resultSet.getBoolean("confirmation"));
+                    group = new Group();
+                    group.setId(resultSet.getInt("id"));
+                    group.setName(resultSet.getString("name"));
+                    // TO-DO
                     break;
                 }
             }
@@ -73,9 +72,10 @@ public class UserDao {
                 statement.close();
             } catch(SQLException exception) {}
         }
-        return user;
+        return group;
     }
 
+    //TO-DO
     public static boolean delete(Integer id) throws DaoException {
         Connection connection = null;
         Statement statement = null;
@@ -95,6 +95,7 @@ public class UserDao {
         return true;
     }
 
+    //TO-DO
     public static boolean create(User entity) throws DaoException {
         Connection connection = null;
         Statement statement = null;
@@ -115,6 +116,7 @@ public class UserDao {
         return true;
     }
     
+    //TO-DO
     public static User update(User entity) throws DaoException {
         User user = null;
         Connection connection = null;
@@ -122,7 +124,7 @@ public class UserDao {
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            user = findEntityById(entity.getId());
+            //user = findEntityById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE users SET ");
             sqlStringBuilder.append("name=").append(entity.getName()).append(", ");
             sqlStringBuilder.append("login=").append(entity.getLogin()).append(", ");

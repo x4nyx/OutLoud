@@ -5,16 +5,15 @@ import java.sql.*;
 
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
-import fpmibsu.outloud.enumfiles.Type;
 
-public class UserDao {
+public class GenreDao {
     private static final String SQL_SELECT_ALL_USERS = 
-                                    "SELECT * FROM users;";
+                                    "SELECT * FROM genres;";
     private static final String SQL_SELECT_ALL_ID =
-                                    "SELECT id FROM users;";
+                                    "SELECT id FROM genres;";
     
-    public static List<User> findAll() throws DaoException {
-        List<User> users = new ArrayList<>();
+    public List<Genre> findAll() throws DaoException {
+        List<Genre> genres = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -23,13 +22,9 @@ public class UserDao {
             statement = connection.prepareStatement(SQL_SELECT_ALL_USERS);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setName(resultSet.getString("name"));
-                user.setLogin(resultSet.getString("login"));
-                user.setPassword(resultSet.getString("password"));
-                user.setRole(Type.valueOf(resultSet.getString("role")));
-                user.setConfimation(resultSet.getBoolean("confirmation"));
+                Genre genre = new Genre();
+                genre.setId(resultSet.getInt("id"));
+                genre.setName(resultSet.getString("name"));
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);
@@ -40,11 +35,11 @@ public class UserDao {
                 statement.close();
             } catch(SQLException exception) {}
         }
-        return users;
+        return genres;
     }
 
-    public static User findEntityById(Integer id) throws DaoException {
-        User user = null;
+    public Genre findEntityById(Integer id) throws DaoException {
+        Genre genre = null;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -54,13 +49,9 @@ public class UserDao {
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 if(resultSet.getInt("id") == id) {
-                    user = new User();
-                    user.setId(resultSet.getInt("id"));
-                    user.setName(resultSet.getString("name"));
-                    user.setLogin(resultSet.getString("login"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setRole(Type.valueOf(resultSet.getString("role")));
-                    user.setConfimation(resultSet.getBoolean("confirmation"));
+                    genre = new Genre();
+                    genre.setId(resultSet.getInt("id"));
+                    genre.setName(resultSet.getString("name"));
                     break;
                 }
             }
@@ -73,16 +64,16 @@ public class UserDao {
                 statement.close();
             } catch(SQLException exception) {}
         }
-        return user;
+        return genre;
     }
 
-    public static boolean delete(Integer id) throws DaoException {
+    public boolean delete(Integer id) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "DELETE FROM users WHERE id=" + id + ";";
+            String sqlString = "DELETE FROM genres WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
             throw new DaoException(exception);
@@ -95,13 +86,13 @@ public class UserDao {
         return true;
     }
 
-    public static boolean create(User entity) throws DaoException {
+    public boolean create(Genre entity) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSER INTO users(id, name, login, password, role, isConfirmed) VALUES";
+            String sqlString = "INSER INTO genres(id, name) VALUES";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
@@ -115,20 +106,16 @@ public class UserDao {
         return true;
     }
     
-    public static User update(User entity) throws DaoException {
-        User user = null;
+    public Genre update(Genre entity) throws DaoException {
+        Genre genre = null;
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            user = findEntityById(entity.getId());
-            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE users SET ");
+            genre = findEntityById(entity.getId());
+            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE genres SET ");
             sqlStringBuilder.append("name=").append(entity.getName()).append(", ");
-            sqlStringBuilder.append("login=").append(entity.getLogin()).append(", ");
-            sqlStringBuilder.append("password=").append(entity.getPassword()).append(", ");
-            sqlStringBuilder.append("role=").append(entity.getRole()).append(", ");
-            sqlStringBuilder.append("confirmation=").append(entity.getConfirmation());
             sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);           
             statement.executeUpdate(sqlString);
@@ -140,6 +127,6 @@ public class UserDao {
                 statement.close();
             } catch(SQLException exception) {}
         }
-        return user;
+        return genre;
     }
 }

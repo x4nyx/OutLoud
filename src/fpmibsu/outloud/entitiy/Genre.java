@@ -19,4 +19,10 @@ public class Genre {
     public String getName() {
         return this.name;
     }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(").append(id).append(", ").append(name).append(")");
+        return new String(stringBuilder);
+    }
 }

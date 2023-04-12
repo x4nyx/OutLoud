@@ -52,19 +52,19 @@ public class UserDao {
         ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement(SQL_SELECT_ALL_ID);
+            statement = connection.prepareStatement("SELECT * FROM users WHERE id=" + id + ";");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                if(resultSet.getInt("id") == id) {
-                    user = new User();
-                    user.setId(resultSet.getInt("id"));
-                    user.setName(resultSet.getString("name"));
-                    user.setLogin(resultSet.getString("login"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setRole(Type.valueOf(resultSet.getString("role")));
-                    user.setConfimation(resultSet.getBoolean("confirmation"));
-                    break;
-                }
+                user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setName(resultSet.getString("name"));
+                user.setLogin(resultSet.getString("login"));
+                user.setPassword(resultSet.getString("password"));
+                user.setRole(Type.valueOf(resultSet.getString("role")));
+                user.setConfimation(resultSet.getBoolean("confirmation"));
+            }
+            if(user == null) {
+                System.out.println("not found\n");
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);
@@ -126,13 +126,18 @@ public class UserDao {
             statement = connection.createStatement();
             user = findEntityById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE users SET ");
-            sqlStringBuilder.append("name=").append(entity.getName()).append(", ");
-            sqlStringBuilder.append("login=").append(entity.getLogin()).append(", ");
-            sqlStringBuilder.append("password=").append(entity.getPassword()).append(", ");
-            sqlStringBuilder.append("role=").append(entity.getRole()).append(", ");
-            sqlStringBuilder.append("confirmation=").append(entity.getConfirmation());
-            sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
-            String sqlString = new String(sqlStringBuilder);           
+            sqlStringBuilder.append("name='").append(entity.getName()).append("', ");
+            sqlStringBuilder.append("login='").append(entity.getLogin()).append("', ");
+            sqlStringBuilder.append("password='").append(entity.getPassword()).append("', ");
+            sqlStringBuilder.append("role='").append(entity.getRole()).append("', ");
+            int confirmation = 0;
+            if(entity.getConfirmation()) {
+                confirmation = 1;
+            }
+            sqlStringBuilder.append("confirmation='").append(confirmation).append("'");
+            sqlStringBuilder.append(" WHERE id=").append(entity.getId()).append(";");
+            String sqlString = new String(sqlStringBuilder);
+            System.out.println(sqlString);
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
             throw new DaoException(exception);

@@ -93,7 +93,7 @@ public class GenreDao {
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSER INTO genres(id, name) VALUES";
+            String sqlString = "INSERT INTO genres(id, name) VALUES";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
@@ -116,7 +116,7 @@ public class GenreDao {
             statement = connection.createStatement();
             genre = findEntityById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE genres SET ");
-            sqlStringBuilder.append("name=").append(entity.getName()).append(", ");
+            sqlStringBuilder.append("name='").append(entity.getName()).append("' ");
             sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);           
             statement.executeUpdate(sqlString);

@@ -46,6 +46,13 @@ public class Group {
     public Boolean getIsConfirmed() {
         return isConfirmed;
     }
+    public int getIntConfirmation() {
+        if(isConfirmed) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     public void setIsConfirmed(Boolean isConfirmed) {
         this.isConfirmed = isConfirmed;
@@ -69,16 +76,12 @@ public class Group {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("(").append(id).append(", ");
-        stringBuilder.append(creator.getId()).append(", ");
-        stringBuilder.append(userNum).append(", ");
-        if(isConfirmed) {
-            stringBuilder.append(1).append(", ");
-        } else {
-            stringBuilder.append(0).append(", ");
-        }
-        stringBuilder.append(description).append(", ");
-        stringBuilder.append(name).append(")");
+        stringBuilder.append("('").append(id).append("', ");
+        stringBuilder.append("'").append(creator.getId()).append("', ");
+        stringBuilder.append("'").append(userNum).append("', ");
+        stringBuilder.append("'").append(getIntConfirmation()).append("', ");
+        stringBuilder.append("'").append(description).append("', ");
+        stringBuilder.append("'").append(name).append("')");
         return new String(stringBuilder);
     }
 }

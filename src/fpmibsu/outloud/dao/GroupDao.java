@@ -8,9 +8,9 @@ import fpmibsu.outloud.entitiy.*;
 
 public class GroupDao {
     private static final String SQL_SELECT_ALL_GROUPS = 
-                                    "SELECT * FROM groups;";
+                                    "SELECT * FROM groupst;";
     private static final String SQL_SELECT_ALL_ID =
-                                    "SELECT id FROM groups;";
+                                    "SELECT id FROM groupst;";
     
     public static List<User> findMembers(Group group) throws DaoException {
         List<User> users = new ArrayList<>();
@@ -40,7 +40,7 @@ public class GroupDao {
         return users;
     }
 
-    private static Group groupCreate(ResultSet resultSet) throws DaoException {
+    private static Group makeGroup(ResultSet resultSet) throws DaoException {
         Group group = new Group();
         try {
             group.setId(resultSet.getInt("id"));
@@ -66,7 +66,7 @@ public class GroupDao {
             statement = connection.prepareStatement(SQL_SELECT_ALL_GROUPS);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                groups.add(groupCreate(resultSet));
+                groups.add(makeGroup(resultSet));
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);
@@ -91,7 +91,7 @@ public class GroupDao {
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 if(resultSet.getInt("id") == id) {
-                    group = groupCreate(resultSet);
+                    group = makeGroup(resultSet);
                     break;
                 }
             }
@@ -113,7 +113,7 @@ public class GroupDao {
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "DELETE FROM groups WHERE id=" + id + ";";
+            String sqlString = "DELETE FROM groupst WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
             sqlString = "DELETE FROM groupmembers WHERE groupid =" + id + ";";
             statement.executeUpdate(sqlString);
@@ -128,7 +128,7 @@ public class GroupDao {
         return true;
     }
 
-    public static boolean updateGroupMemebers(Integer groupid, List<User> members) throws DaoException{
+    public static boolean updateGroupMembers(Integer groupid, List<User> members) throws DaoException{
         Connection connection = null;
         Statement statement = null;
         try{
@@ -136,7 +136,7 @@ public class GroupDao {
             statement = connection.createStatement();
             for(User member : members) {
                 String sqlString = "INSERT INTO groupmembers(groupid, userid) VALUES";
-                sqlString += "(" + groupid + ", " + member.getId() + ");";
+                sqlString += "('" + groupid + "', '" + member.getId() + "');";
                 statement.executeUpdate(sqlString);
             }
         } catch(SQLException exception) {
@@ -145,7 +145,37 @@ public class GroupDao {
             try {
                 connection.close();
                 statement.close();
-            } catch(SQLException exception) {}
+            } catch(SQLException ignored) {}
+        }
+        return true;
+    }
+
+    public static Boolean deleteMember(Integer userid, Integer groupid) throws DaoException {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            connection = ConnectionCreator.createConnection();
+            statement = connection.createStatement();
+            String sqlString = "DELETE FROM groupmembers WHERE userid=" + userid + " AND groupid=" +
+                                                                                        groupid + ";";
+            statement.executeUpdate(sqlString);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return true;
+    }
+
+    public static Boolean addMember(Integer userid, Integer groupid) throws DaoException {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            connection = ConnectionCreator.createConnection();
+            statement = connection.createStatement();
+            String sqlString = "INSERT INTO groupmembers(groupid, userid) VALUES ";
+            sqlString += "('" + userid + "', " + groupid + "');";
+            statement.executeUpdate(sqlString);
+        } catch (SQLException e) {
+            throw new DaoException(e);
         }
         return true;
     }
@@ -156,17 +186,18 @@ public class GroupDao {
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSER INTO groups(id, creatorid, userNum, confirmation, description, name) VALUES";
+            String sqlString = "INSERT INTO groupst(id, creatorid, userNum, confirmation, description, name) VALUES ";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
-            updateGroupMemebers(entity.getId(), entity.getMembers());
+            updateGroupMembers(entity.getId(), entity.getMembers());
         } catch(SQLException exception) {
             throw new DaoException(exception);
         } finally {
             try {
                 connection.close();
                 statement.close();
-            } catch(SQLException exception) {}
+
+            } catch(SQLException ignored) {}
         }
         return true;
     }
@@ -179,12 +210,12 @@ public class GroupDao {
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
             group = findEntityById(entity.getId());
-            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE groups SET ");
-            sqlStringBuilder.append("name=").append(entity.getName()).append(", ");
-            sqlStringBuilder.append("creatorid=").append(entity.getCreator().getId()).append(", ");
-            sqlStringBuilder.append("description=").append(entity.getDescription()).append(", ");
-            sqlStringBuilder.append("userNum=").append(entity.getUserNum()).append(", ");
-            sqlStringBuilder.append("confirmation=").append(entity.getIsConfirmed());
+            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE groupst SET ");
+            sqlStringBuilder.append("name='").append(entity.getName()).append("', ");
+            sqlStringBuilder.append("creatorid='").append(entity.getCreator().getId()).append("', ");
+            sqlStringBuilder.append("description='").append(entity.getDescription()).append("', ");
+            sqlStringBuilder.append("userNum='").append(entity.getUserNum()).append("', ");
+            sqlStringBuilder.append("confirmation='").append(entity.getIsConfirmed()).append("' ");
             sqlStringBuilder.append("WHERE id=").append(group.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);           
             statement.executeUpdate(sqlString);

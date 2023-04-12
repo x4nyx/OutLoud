@@ -10,9 +10,18 @@ import fpmibsu.outloud.entitiy.*;
 public class PostDao {
     private static final String SQL_SELECT_ALL_USERS = 
                                     "SELECT * FROM posts;";
-    //private static final String SQL_SELECT_ALL_ID =
-    //                                "SELECT id FROM posts;";
-    
+
+    private static Post makePost(ResultSet resultSet) throws SQLException, DaoException {
+        Post post = new Post();
+        post.setId(resultSet.getInt("id"));
+        post.setCreator(UserDao.findEntityById(resultSet.getInt("creatorid")));
+        post.setText(resultSet.getString("text"));
+        post.setTitle(resultSet.getString("title"));
+        post.setViewCount(resultSet.getInt("viewCount"));
+        post.setGroup(GroupDao.findEntityById(resultSet.getInt("groupid")));
+        return post;
+    }
+
     public static List<Post> findAll() throws DaoException {
         List<Post> posts = new ArrayList<>();
         Connection connection = null;
@@ -23,13 +32,8 @@ public class PostDao {
             statement = connection.prepareStatement(SQL_SELECT_ALL_USERS);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                Post post = new Post();
-                post.setId(resultSet.getInt("id"));
-                post.setCreator(UserDao.findEntityById(resultSet.getInt("creatorid")));
-                post.setText(resultSet.getString("text"));
-                post.setTitle(resultSet.getString("title"));
-                post.setViewCount(resultSet.getInt("viewsCount"));
-                post.setGroup(GroupDao.findEntityById(resultSet.getInt("groupid")));
+                Post post = makePost(resultSet);
+                posts.add(post);
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);
@@ -52,13 +56,9 @@ public class PostDao {
             connection = ConnectionCreator.createConnection();
             statement = connection.prepareStatement("SELECT * FROM posts WHERE id=" + id);
             resultSet = statement.executeQuery();
-            post = new Post();
-            post.setId(resultSet.getInt("id"));
-            post.setText(resultSet.getString("text"));
-            post.setCreator(UserDao.findEntityById(resultSet.getInt("creatorid")));
-            post.setGroup(GroupDao.findEntityById(resultSet.getInt("groupid")));
-            post.setTitle(resultSet.getString("title"));
-            post.setViewCount(resultSet.getInt("viewCount"));
+            while (resultSet.next()) {
+                post = makePost(resultSet);
+            }
         } catch(SQLException exception) {
             throw new DaoException(exception);
         } finally {
@@ -119,11 +119,11 @@ public class PostDao {
             statement = connection.createStatement();
             post = findEntityById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE posts SET ");
-            sqlStringBuilder.append("groupid=").append(entity.getGroup().getId()).append(", ");
-            sqlStringBuilder.append("creatorid=").append(entity.getCreator().getId()).append(", ");
-            sqlStringBuilder.append("text=").append(entity.getText()).append(", ");
-            sqlStringBuilder.append("title=").append(entity.getTitle()).append(", ");
-            sqlStringBuilder.append("viewCount=").append(entity.getViewCount()).append(", ");
+            sqlStringBuilder.append("groupid='").append(entity.getGroup().getId()).append("', ");
+            sqlStringBuilder.append("creatorid='").append(entity.getCreator().getId()).append("', ");
+            sqlStringBuilder.append("text='").append(entity.getText()).append("', ");
+            sqlStringBuilder.append("title='").append(entity.getTitle()).append("', ");
+            sqlStringBuilder.append("viewCount='").append(entity.getViewCount()).append("' ");
             sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);           
             statement.executeUpdate(sqlString);

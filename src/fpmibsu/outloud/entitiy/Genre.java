@@ -22,7 +22,7 @@ public class Genre {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("(").append(id).append(", ").append(name).append(")");
+        stringBuilder.append("('").append(id).append("', '").append(name).append("')");
         return new String(stringBuilder);
     }
 }

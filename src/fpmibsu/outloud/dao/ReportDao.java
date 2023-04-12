@@ -7,10 +7,10 @@ import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 import fpmibsu.outloud.enumfiles.Type;
 
-
-public class UserDao {
-    private static final String SQL_SELECT_ALL_USERS = 
-                                    "SELECT * FROM users;";
+//TO-DO
+public class ReportDao {
+    private static final String SQL_SELECT_ALL_USERS =
+            "SELECT * FROM users;";
 
     public static boolean isExist(Integer userid) throws DaoException {
         int count = 0;
@@ -20,7 +20,7 @@ public class UserDao {
         try {
             connection = ConnectionCreator.createConnection();
             statement = connection.prepareStatement("SELECT COUNT(*) AS count FROM users WHERE id="
-                                                                        + userid + ";");
+                    + userid + ";");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 count = resultSet.getInt("count");

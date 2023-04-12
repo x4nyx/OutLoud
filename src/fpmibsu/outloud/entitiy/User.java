@@ -56,6 +56,13 @@ public class User {
     public Boolean getConfirmation() {
         return this.isConfirmed;
     }
+    public Integer getIntConfirmation() {
+        if(this.isConfirmed) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("(");

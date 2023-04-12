@@ -27,18 +27,19 @@ public class UserDao {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setName(resultSet.getString("name"));
+                user.setConfimation(resultSet.getInt("confirmation") == 1);
                 user.setLogin(resultSet.getString("login"));
                 user.setPassword(resultSet.getString("password"));
                 user.setRole(Type.valueOf(resultSet.getString("role")));
-                user.setConfimation(resultSet.getBoolean("confirmation"));
+                users.add(user);
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
                 connection.close();
                 statement.close();
+                resultSet.close();
             } catch(SQLException exception) {}
         }
         return users;
@@ -102,7 +103,7 @@ public class UserDao {
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSER INTO users(id, name, login, password, role, isConfirmed) VALUES";
+            String sqlString = "INSERT INTO users(id, name, login, password, role, confirmation) VALUES";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {

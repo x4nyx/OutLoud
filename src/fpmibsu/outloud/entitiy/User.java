@@ -60,11 +60,15 @@ public class User {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("(");
         stringBuilder.append(id).append(", ");
-        stringBuilder.append(name).append(", ");
-        stringBuilder.append(login).append(", ");
-        stringBuilder.append(password).append(", ");
-        stringBuilder.append(role).append(", ");
-        stringBuilder.append(isConfirmed).append(")");
+        stringBuilder.append('\'').append(name).append("\', ");
+        stringBuilder.append('\'').append(login).append("\', ");
+        stringBuilder.append('\'').append(password).append("\', ");
+        stringBuilder.append('\'').append(role).append("\', ");
+        int temp = 0;
+        if(isConfirmed) {
+            temp = 1;
+        }
+        stringBuilder.append(temp).append(")");
         return new String(stringBuilder);
     }
 }

@@ -6,14 +6,14 @@ import java.sql.*;
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 
-//TO-DO с
+
 public class PostDao {
     private static final String SQL_SELECT_ALL_USERS = 
                                     "SELECT * FROM posts;";
-    private static final String SQL_SELECT_ALL_ID =
-                                    "SELECT id FROM posts;";
+    //private static final String SQL_SELECT_ALL_ID =
+    //                                "SELECT id FROM posts;";
     
-    public List<Post> findAll() throws DaoException {
+    public static List<Post> findAll() throws DaoException {
         List<Post> posts = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
@@ -43,24 +43,22 @@ public class PostDao {
         return posts;
     }
 
-    //TO-DO
-    public Genre findEntityById(Integer id) throws DaoException {
-        Genre genre = null;
+    public static Post findEntityById(Integer id) throws DaoException {
+        Post post = null;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement(SQL_SELECT_ALL_ID);
+            statement = connection.prepareStatement("SELECT * FROM posts WHERE id=" + id);
             resultSet = statement.executeQuery();
-            while(resultSet.next()) {
-                if(resultSet.getInt("id") == id) {
-                    genre = new Genre();
-                    genre.setId(resultSet.getInt("id"));
-                    genre.setName(resultSet.getString("name"));
-                    break;
-                }
-            }
+            post = new Post();
+            post.setId(resultSet.getInt("id"));
+            post.setText(resultSet.getString("text"));
+            post.setCreator(UserDao.findEntityById(resultSet.getInt("creatorid")));
+            post.setGroup(GroupDao.findEntityById(resultSet.getInt("groupid")));
+            post.setTitle(resultSet.getString("title"));
+            post.setViewCount(resultSet.getInt("viewCount"));
         } catch(SQLException exception) {
             throw new DaoException(exception);
         } finally {
@@ -70,17 +68,16 @@ public class PostDao {
                 statement.close();
             } catch(SQLException exception) {}
         }
-        return genre;
+        return post;
     }
 
-    //TO-DO
-    public boolean delete(Integer id) throws DaoException {
+    public static boolean delete(Integer id) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "DELETE FROM genres WHERE id=" + id + ";";
+            String sqlString = "DELETE FROM posts WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
             throw new DaoException(exception);
@@ -93,14 +90,13 @@ public class PostDao {
         return true;
     }
 
-    //TO-DO
-    public boolean create(Genre entity) throws DaoException {
+    public boolean create(Post entity) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSER INTO genres(id, name) VALUES";
+            String sqlString = "INSER INTO posts(id, groupid, creatorid, viewCount, text, title) VALUES";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
@@ -114,17 +110,20 @@ public class PostDao {
         return true;
     }
     
-    //TO-DO
-    public Genre update(Genre entity) throws DaoException {
-        Genre genre = null;
+    public Post update(Post entity) throws DaoException {
+        Post post = null;
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            genre = findEntityById(entity.getId());
-            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE genres SET ");
-            sqlStringBuilder.append("name=").append(entity.getName()).append(", ");
+            post = findEntityById(entity.getId());
+            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE posts SET ");
+            sqlStringBuilder.append("groupid=").append(entity.getGroup().getId()).append(", ");
+            sqlStringBuilder.append("creatorid=").append(entity.getCreator().getId()).append(", ");
+            sqlStringBuilder.append("text=").append(entity.getText()).append(", ");
+            sqlStringBuilder.append("title=").append(entity.getTitle()).append(", ");
+            sqlStringBuilder.append("viewCount=").append(entity.getViewCount()).append(", ");
             sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);           
             statement.executeUpdate(sqlString);
@@ -136,6 +135,6 @@ public class PostDao {
                 statement.close();
             } catch(SQLException exception) {}
         }
-        return genre;
+        return post;
     }
 }

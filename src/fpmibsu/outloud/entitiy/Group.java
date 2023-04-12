@@ -66,4 +66,19 @@ public class Group {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(").append(id).append(", ");
+        stringBuilder.append(creator.getId()).append(", ");
+        stringBuilder.append(userNum).append(", ");
+        if(isConfirmed) {
+            stringBuilder.append(1).append(", ");
+        } else {
+            stringBuilder.append(0).append(", ");
+        }
+        stringBuilder.append(description).append(", ");
+        stringBuilder.append(name).append(")");
+        return new String(stringBuilder);
+    }
 }

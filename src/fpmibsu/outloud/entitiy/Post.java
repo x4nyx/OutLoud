@@ -55,4 +55,15 @@ public class Post {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(").append(id).append(", ");
+        stringBuilder.append(group.getId()).append(", ");
+        stringBuilder.append(creator.getId()).append(", ");
+        stringBuilder.append(viewCount).append(", ");
+        stringBuilder.append(text).append(", ");
+        stringBuilder.append(title).append(")");
+        return new String(stringBuilder);
+    }
 }

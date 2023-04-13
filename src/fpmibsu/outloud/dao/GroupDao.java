@@ -9,8 +9,6 @@ import fpmibsu.outloud.entitiy.*;
 public class GroupDao {
     private static final String SQL_SELECT_ALL_GROUPS = 
                                     "SELECT * FROM groupst;";
-    private static final String SQL_SELECT_ALL_ID =
-                                    "SELECT id FROM groupst;";
     
     public static List<User> findMembers(Group group) throws DaoException {
         List<User> users = new ArrayList<>();
@@ -87,13 +85,10 @@ public class GroupDao {
         ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement(SQL_SELECT_ALL_ID);
+            statement = connection.prepareStatement("SELECT * FROM groupst WHERE id=" + id + ";");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                if(resultSet.getInt("id") == id) {
-                    group = makeGroup(resultSet);
-                    break;
-                }
+                group = makeGroup(resultSet);
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);

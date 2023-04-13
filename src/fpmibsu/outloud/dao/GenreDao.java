@@ -39,7 +39,7 @@ public class GenreDao {
         return genres;
     }
 
-    public Genre findEntityById(Integer id) throws DaoException {
+    public static Genre findEntityById(Integer id) throws DaoException {
         Genre genre = null;
         Connection connection = null;
         PreparedStatement statement = null;

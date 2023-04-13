@@ -26,7 +26,7 @@ public class Album {
         this.creationDate = creationDate;
     }
 
-    public void setPlaylist(Boolean isPlaylist) {
+    public void setIsPlaylist(Boolean isPlaylist) {
         this.isPlayList = isPlaylist;
     }
 
@@ -50,11 +50,28 @@ public class Album {
         return this.creationDate;
     }
 
-    public Boolean getPlaylist() {
+    public Boolean getIsPlaylist() {
         return this.isPlayList;
+    }
+    public int getIntIsPlayList() {
+        if(this.isPlayList) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     public List<Track> getTrackList() {
         return this.trackList;
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("('").append(getId()).append("', ");
+        stringBuilder.append("'").append(getName()).append("', ");
+        stringBuilder.append("'").append(getCreator().getId()).append("', ");
+        stringBuilder.append("'").append(getCreationDate()).append("', ");
+        stringBuilder.append("'").append(getIntIsPlayList()).append("')");
+        return new String(stringBuilder);
     }
 }

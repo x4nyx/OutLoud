@@ -11,6 +11,8 @@ public class PostDao {
     private static final String SQL_SELECT_ALL_USERS = 
                                     "SELECT * FROM posts;";
 
+
+
     private static Post makePost(ResultSet resultSet) throws SQLException, DaoException {
         Post post = new Post();
         post.setId(resultSet.getInt("id"));

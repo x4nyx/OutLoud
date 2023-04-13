@@ -4,6 +4,7 @@ import fpmibsu.outloud.dao.DaoException;
 import fpmibsu.outloud.dao.UserDao;
 import fpmibsu.outloud.entitiy.Post;
 import fpmibsu.outloud.entitiy.User;
+import fpmibsu.outloud.enumfiles.Status;
 import fpmibsu.outloud.enumfiles.Type;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws DaoException {
-        
+        Status status = Status.CHECKED;
+        System.out.println(status.toString());
     }
 }

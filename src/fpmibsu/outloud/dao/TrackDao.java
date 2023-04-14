@@ -1,15 +1,13 @@
 package fpmibsu.outloud.dao;
 
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
-import fpmibsu.outloud.entitiy.Post;
 import fpmibsu.outloud.entitiy.Track;
-import fpmibsu.outloud.entitiy.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//TO-DO test
+
 public class TrackDao {
 
 
@@ -17,7 +15,7 @@ public class TrackDao {
         Track track = new Track();
         track.setId(resultSet.getInt("id"));
         track.setCreator(UserDao.findEntityById(resultSet.getInt("creatorid")));
-        track.setDate(resultSet.getInt("date"));
+        track.setDate(resultSet.getDate("date"));
         track.setGenre(GenreDao.findEntityById(resultSet.getInt("genreid")));
         track.setName(resultSet.getString("name"));
         track.setPlaysCount(resultSet.getInt("playsCount"));
@@ -40,16 +38,17 @@ public class TrackDao {
             statement = connection.prepareStatement("SELECT * FROM tracks;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                tracks.add(makeTrack(resultSet));
+                Track track = makeTrack(resultSet);
+                tracks.add(track);
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-                resultSet.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
+            } catch(SQLException ignored) {}
         }
         return tracks;
     }
@@ -71,10 +70,10 @@ public class TrackDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
+            } catch(SQLException ignored) {}
         }
         return track;
     }
@@ -98,10 +97,10 @@ public class TrackDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-                resultSet.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
+            } catch(SQLException ignored) {}
         }
         return tracks;
     }
@@ -120,9 +119,9 @@ public class TrackDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return true;
     }
@@ -150,9 +149,9 @@ public class TrackDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return trackToUpdate;
     }
@@ -173,9 +172,9 @@ public class TrackDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return true;
     }

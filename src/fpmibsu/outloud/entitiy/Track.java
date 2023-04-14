@@ -1,9 +1,11 @@
 package fpmibsu.outloud.entitiy;
 
+import java.sql.Date;
+
 public class Track {
     private Integer id;
     private User creator;
-    private Integer date;
+    private Date date;
     private Genre genre;
     private String name;
     private Integer playsCount;
@@ -16,9 +18,7 @@ public class Track {
         this.creator = creator;
     }
 
-    public void setDate(Integer date) {
-        this.date = date;
-    }
+    public void setDate(Date date) {this.date = date;}
 
     public void setGenre(Genre genre) {
         this.genre = genre;
@@ -40,7 +40,7 @@ public class Track {
         return this.creator;
     }
 
-    public Integer getDate() {
+    public Date getDate() {
         return this.date;
     }
 
@@ -63,7 +63,7 @@ public class Track {
         stringBuilder.append("'").append(date).append("', ");
         stringBuilder.append("'").append(genre.getId()).append("', ");
         stringBuilder.append("'").append(name).append("', ");
-        stringBuilder.append("'").append(playsCount).append(")");
+        stringBuilder.append("'").append(playsCount).append("')");
         return new String(stringBuilder);
     }
 }

@@ -9,6 +9,16 @@ public class User {
     private Type role;
     private Boolean isConfirmed;
 
+    public User() {}
+    public User(User toCopy) {
+        this.id = toCopy.getId();
+        this.name = toCopy.getName();
+        this.isConfirmed = toCopy.isConfirmed;
+        this.login = toCopy.getLogin();
+        this.password = toCopy.getPassword();
+        this.role = toCopy.getRole();
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -67,10 +77,10 @@ public class User {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("(");
         stringBuilder.append(id).append(", ");
-        stringBuilder.append('\'').append(name).append("\', ");
-        stringBuilder.append('\'').append(login).append("\', ");
-        stringBuilder.append('\'').append(password).append("\', ");
-        stringBuilder.append('\'').append(role).append("\', ");
+        stringBuilder.append("'").append(name).append("', ");
+        stringBuilder.append("'").append(login).append("', ");
+        stringBuilder.append("'").append(password).append("', ");
+        stringBuilder.append("'").append(role).append("', ");
         int temp = 0;
         if(isConfirmed) {
             temp = 1;

@@ -1,7 +1,5 @@
 package fpmibsu.outloud.connectioncreator;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 public class ConnectionCreator{
@@ -17,5 +15,23 @@ public class ConnectionCreator{
             throw new SQLException(e);
         }
         return connection;
+    }
+
+    public static void close(Connection connection) throws SQLException{
+        if(connection != null) {
+            connection.close();
+        }
+    }
+
+    public static void close(ResultSet resultSet) throws SQLException {
+        if(resultSet != null) {
+            resultSet.close();
+        }
+    }
+
+    public static void close(Statement statement) throws SQLException{
+        if(statement != null) {
+            statement.close();
+        }
     }
 }

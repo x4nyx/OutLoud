@@ -1,10 +1,10 @@
 package fpmibsu.outloud.enumfiles;
 
 public enum Status {
-    CHECKED("checked"),
-    DENIED("denied"),
-    ACCEPTED("accepted"),
-    WAITED("waited");
+    CHECKED("CHECKED"),
+    DENIED("DENIED"),
+    ACCEPTED("ACCEPTED"),
+    WAITED("WAITED");
 
     private String value;
 

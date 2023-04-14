@@ -39,9 +39,9 @@ public class ReportDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException ignored) {}
         }
         return reports;
@@ -65,9 +65,9 @@ public class ReportDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException ignored) {}
         }
         return reports;
@@ -89,10 +89,10 @@ public class ReportDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
+            } catch(SQLException ignored) {}
         }
         return report;
     }
@@ -115,9 +115,9 @@ public class ReportDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException ignored) {}
         }
         return count > 0;
@@ -138,8 +138,8 @@ public class ReportDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
             } catch (SQLException ignored) {}
         }
         return true;
@@ -158,8 +158,8 @@ public class ReportDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
             } catch(SQLException ignored) {}
         }
         return true;
@@ -191,9 +191,9 @@ public class ReportDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return reportToUpdate;
     }

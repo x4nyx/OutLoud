@@ -29,10 +29,10 @@ public class UserDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-                resultSet.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
+            } catch(SQLException ignored) {}
         }
         return (count > 0);
     }
@@ -65,10 +65,10 @@ public class UserDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-                resultSet.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
+            } catch(SQLException ignored) {}
         }
         return users;
     }
@@ -89,15 +89,18 @@ public class UserDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
+            } catch(SQLException ignored) {}
         }
         return user;
     }
 
     public static boolean delete(Integer id) throws DaoException {
+        if(!isExist(id)) {
+            return false;
+        }
         Connection connection = null;
         Statement statement = null;
         try{
@@ -109,14 +112,17 @@ public class UserDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return true;
     }
 
     public static boolean create(User entity) throws DaoException {
+        if(isExist(entity.getId())) {
+            return false;
+        }
         Connection connection = null;
         Statement statement = null;
         try{
@@ -129,9 +135,9 @@ public class UserDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return true;
     }
@@ -152,15 +158,14 @@ public class UserDao {
             sqlStringBuilder.append("confirmation='").append(entity.getIntConfirmation()).append("'");
             sqlStringBuilder.append(" WHERE id=").append(entity.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);
-            System.out.println(sqlString);
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return user;
     }

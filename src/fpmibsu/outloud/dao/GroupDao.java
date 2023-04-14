@@ -30,10 +30,10 @@ public class GroupDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(resultSet);
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return users;
     }
@@ -70,10 +70,10 @@ public class GroupDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(resultSet);
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return groups;
     }
@@ -94,10 +94,10 @@ public class GroupDao {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(resultSet);
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return group;
     }
@@ -116,9 +116,9 @@ public class GroupDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return true;
     }
@@ -138,8 +138,8 @@ public class GroupDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
             } catch(SQLException ignored) {}
         }
         return true;
@@ -156,6 +156,11 @@ public class GroupDao {
             statement.executeUpdate(sqlString);
         } catch (SQLException e) {
             throw new DaoException(e);
+        } finally {
+            try {
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch (SQLException ignored) {}
         }
         return true;
     }
@@ -171,6 +176,11 @@ public class GroupDao {
             statement.executeUpdate(sqlString);
         } catch (SQLException e) {
             throw new DaoException(e);
+        } finally {
+            try {
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch (SQLException ignored) {}
         }
         return true;
     }
@@ -189,9 +199,8 @@ public class GroupDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
             } catch(SQLException ignored) {}
         }
         return true;
@@ -218,9 +227,9 @@ public class GroupDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return group;
     }

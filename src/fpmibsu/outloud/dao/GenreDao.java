@@ -12,8 +12,20 @@ public class GenreDao {
                                     "SELECT * FROM genres;";
     private static final String SQL_SELECT_ALL_ID =
                                     "SELECT id FROM genres;";
-    
-    public List<Genre> findAll() throws DaoException {
+
+    private static Genre makeGenre(ResultSet resultSet) throws DaoException {
+        Genre genre = null;
+        try {
+            genre = new Genre();
+            genre.setId(resultSet.getInt("id"));
+            genre.setName(resultSet.getString("name"));
+        } catch (SQLException exception) {
+            throw new DaoException(exception);
+        }
+        return genre;
+    }
+
+    public static List<Genre> findAll() throws DaoException {
         List<Genre> genres = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
@@ -23,18 +35,16 @@ public class GenreDao {
             statement = connection.prepareStatement(SQL_SELECT_ALL_USERS);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                Genre genre = new Genre();
-                genre.setId(resultSet.getInt("id"));
-                genre.setName(resultSet.getString("name"));
+                genres.add(makeGenre(resultSet));
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(resultSet);
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return genres;
     }
@@ -46,24 +56,20 @@ public class GenreDao {
         ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement(SQL_SELECT_ALL_ID);
+            String sqlString = "SELECT * FROM genres WHERE id=" + id + ";";
+            statement = connection.prepareStatement(sqlString);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                if(resultSet.getInt("id") == id) {
-                    genre = new Genre();
-                    genre.setId(resultSet.getInt("id"));
-                    genre.setName(resultSet.getString("name"));
-                    break;
-                }
+                genre = makeGenre(resultSet);
             }
         } catch(SQLException exception) {
             throw new DaoException(exception);
         } finally {
             try {
-                resultSet.close();
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(resultSet);
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return genre;
     }
@@ -80,9 +86,9 @@ public class GenreDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return true;
     }
@@ -100,9 +106,9 @@ public class GenreDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return true;
     }
@@ -124,9 +130,9 @@ public class GenreDao {
             throw new DaoException(exception);
         } finally {
             try {
-                connection.close();
-                statement.close();
-            } catch(SQLException exception) {}
+                ConnectionCreator.close(connection);
+                ConnectionCreator.close(statement);
+            } catch(SQLException ignored) {}
         }
         return genre;
     }

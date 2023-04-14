@@ -1,9 +1,9 @@
 package fpmibsu.outloud.enumfiles;
 
 public enum Type {
-    USER("user"),
-    MODERATOR("moderator"),
-    HELPER("helper");
+    USER("USER"),
+    MODERATOR("MODERATOR"),
+    HELPER("HELPER");
 
     private String value;
 

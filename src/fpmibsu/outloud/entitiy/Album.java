@@ -1,14 +1,26 @@
 package fpmibsu.outloud.entitiy;
 
 import java.util.List;
+import java.sql.Date;
 
 public class Album {
     private Integer id;
     private String name;
     private User creator;
-    private Integer creationDate;
+    private Date creationDate;
     private Boolean isPlayList;
     private List<Track> trackList;
+
+    public Album() {}
+
+    public Album(Album albumToCopy) {
+        this.id = albumToCopy.getId();
+        this.name = albumToCopy.getName();
+        this.isPlayList = albumToCopy.getIsPlaylist();
+        this.creator = albumToCopy.getCreator();
+        this.creationDate = albumToCopy.getCreationDate();
+        this.trackList = albumToCopy.getTrackList();
+    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -22,7 +34,7 @@ public class Album {
         this.creator = creator;
     }
     
-    public void setCreationDate(Integer creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -46,7 +58,7 @@ public class Album {
         return this.creator;
     }
 
-    public Integer getCreationDate() {
+    public Date getCreationDate() {
         return this.creationDate;
     }
 
@@ -69,9 +81,9 @@ public class Album {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("('").append(getId()).append("', ");
         stringBuilder.append("'").append(getName()).append("', ");
+        stringBuilder.append("'").append(getIntIsPlayList()).append("', ");
         stringBuilder.append("'").append(getCreator().getId()).append("', ");
-        stringBuilder.append("'").append(getCreationDate()).append("', ");
-        stringBuilder.append("'").append(getIntIsPlayList()).append("')");
+        stringBuilder.append("'").append(getCreationDate()).append("') ");
         return new String(stringBuilder);
     }
 }

@@ -8,48 +8,45 @@ import fpmibsu.outloud.entitiy.*;
 
 
 public class PostDao {
-    private static final String SQL_SELECT_ALL_USERS = 
-                                    "SELECT * FROM posts;";
-
-
-
     private static Post makePost(ResultSet resultSet) throws SQLException, DaoException {
         Post post = new Post();
         post.setId(resultSet.getInt("id"));
-        post.setCreator(UserDao.findEntityById(resultSet.getInt("creatorid")));
+        post.setCreator(UserDao.findUserById(resultSet.getInt("creatorid")));
         post.setText(resultSet.getString("text"));
         post.setTitle(resultSet.getString("title"));
         post.setViewCount(resultSet.getInt("viewCount"));
-        post.setGroup(GroupDao.findEntityById(resultSet.getInt("groupid")));
+        post.setGroup(GroupDao.findGroupById(resultSet.getInt("groupid")));
         return post;
     }
 
-    public static List<Post> findAll() throws DaoException {
+    public static List<Post> findAllPosts() throws DaoException {
         List<Post> posts = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement(SQL_SELECT_ALL_USERS);
+            statement = connection.prepareStatement("SELECT * FROM posts;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 Post post = makePost(resultSet);
                 posts.add(post);
             }
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return posts;
     }
 
-    public static Post findEntityById(Integer id) throws DaoException {
+    public static Post findPostById(Integer id) throws DaoException {
         Post post = null;
         Connection connection = null;
         PreparedStatement statement = null;
@@ -61,19 +58,21 @@ public class PostDao {
             while (resultSet.next()) {
                 post = makePost(resultSet);
             }
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return post;
     }
 
-    public static boolean delete(Integer id) throws DaoException {
+    public static boolean deletePostById(Integer id) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
@@ -81,22 +80,25 @@ public class PostDao {
             statement = connection.createStatement();
             String sqlString = "DELETE FROM posts WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
 
     public static boolean isExist(Integer id) throws DaoException {
-        return findEntityById(id) != null;
+        return findPostById(id) != null;
     }
 
-    public static boolean create(Post entity) throws DaoException {
+    public static boolean createPost(Post entity) throws DaoException {
         if(isExist(entity.getId())) {
             return false;
         }
@@ -106,27 +108,30 @@ public class PostDao {
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
             String sqlString = "INSERT INTO posts(id, groupid, creatorid, viewCount, text, title) VALUES";
-            sqlString += entity.toString() + ";";            
+            sqlString += entity + ";";
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
     
-    public static Post update(Post entity) throws DaoException {
-        Post post = null;
+    public static Post updatePost(Post entity) throws DaoException {
+        Post post;
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            post = findEntityById(entity.getId());
+            post = findPostById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE posts SET ");
             sqlStringBuilder.append("groupid='").append(entity.getGroup().getId()).append("', ");
             sqlStringBuilder.append("creatorid='").append(entity.getCreator().getId()).append("', ");
@@ -136,13 +141,15 @@ public class PostDao {
             sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);           
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return post;
     }

@@ -9,9 +9,6 @@ import fpmibsu.outloud.enumfiles.Type;
 
 
 public class UserDao {
-    private static final String SQL_SELECT_ALL_USERS = 
-                                    "SELECT * FROM users;";
-
     public static boolean isExist(Integer userid) throws DaoException {
         int count = 0;
         Connection connection = null;
@@ -25,14 +22,16 @@ public class UserDao {
             while(resultSet.next()) {
                 count = resultSet.getInt("count");
             }
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return (count > 0);
     }
@@ -48,32 +47,34 @@ public class UserDao {
         return user;
     }
 
-    public static List<User> findAll() throws DaoException {
+    public static List<User> findAllUsers() throws DaoException {
         List<User> users = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement(SQL_SELECT_ALL_USERS);
+            statement = connection.prepareStatement("SELECT * FROM users;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 User user = makeUser(resultSet);
                 users.add(user);
             }
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return users;
     }
 
-    public static User findEntityById(Integer id) throws DaoException {
+    public static User findUserById(Integer id) throws DaoException {
         User user = null;
         Connection connection = null;
         PreparedStatement statement = null;
@@ -85,19 +86,21 @@ public class UserDao {
             while(resultSet.next()) {
                 user = makeUser(resultSet);
             }
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return user;
     }
 
-    public static boolean delete(Integer id) throws DaoException {
+    public static boolean deleteUserById(Integer id) throws DaoException {
         if(!isExist(id)) {
             return false;
         }
@@ -108,18 +111,21 @@ public class UserDao {
             statement = connection.createStatement();
             String sqlString = "DELETE FROM users WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
 
-    public static boolean create(User entity) throws DaoException {
+    public static boolean createUser(User entity) throws DaoException {
         if(isExist(entity.getId())) {
             return false;
         }
@@ -129,27 +135,30 @@ public class UserDao {
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
             String sqlString = "INSERT INTO users(id, name, login, password, role, confirmation) VALUES";
-            sqlString += entity.toString() + ";";
+            sqlString += entity + ";";
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
 
-    public static User update(User entity) throws DaoException {
+    public static User updateUser(User entity) throws DaoException {
         User user;
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            user = findEntityById(entity.getId());
+            user = findUserById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE users SET ");
             sqlStringBuilder.append("name='").append(entity.getName()).append("', ");
             sqlStringBuilder.append("login='").append(entity.getLogin()).append("', ");
@@ -159,13 +168,15 @@ public class UserDao {
             sqlStringBuilder.append(" WHERE id=").append(entity.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return user;
     }

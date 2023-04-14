@@ -2,27 +2,24 @@ package fpmibsu.outloud.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
-
-import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 import fpmibsu.outloud.enumfiles.Status;
-import fpmibsu.outloud.enumfiles.Type;
 
 //TO-DO
 public class ReportDao {
     private static Report makeReport(ResultSet resultSet) throws SQLException, DaoException {
         Report report = new Report();
         report.setId(resultSet.getInt("id"));
-        report.setCreator(UserDao.findEntityById(resultSet.getInt("creatorid")));
-        report.setHelper(UserDao.findEntityById(resultSet.getInt("helperid")));
+        report.setCreator(UserDao.findUserById(resultSet.getInt("creatorid")));
+        report.setHelper(UserDao.findUserById(resultSet.getInt("helperid")));
         report.setStatus(Status.fromString(resultSet.getString("status")));
         report.setText(resultSet.getString("text"));
         report.setTitle(resultSet.getString("title"));
         return report;
     }
 
-    public static List<Report> findAll() throws DaoException {
+    public static List<Report> findAllReports() throws DaoException {
         List<Report> reports = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
@@ -35,14 +32,16 @@ public class ReportDao {
                 Report report = makeReport(resultSet);
                 reports.add(report);
             }
-        } catch(SQLException | DaoException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return reports;
     }
@@ -61,19 +60,21 @@ public class ReportDao {
                 Report report = makeReport(resultSet);
                 reports.add(report);
             }
-        } catch(SQLException | DaoException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return reports;
     }
 
-    public static Report findEntityById(Integer id) throws DaoException{
+    public static Report findReportById(Integer id) throws DaoException{
         Report report = null;
         Connection connection = null;
         PreparedStatement statement = null;
@@ -85,45 +86,22 @@ public class ReportDao {
             while(resultSet.next()) {
                 report = makeReport(resultSet);
             }
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return report;
     }
 
-    public static boolean isExists(Integer id) throws DaoException {
-        int count = 0;
-        Report report = null;
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT COUNT(*) AS count FROM reports WHERE id=" + id + ";");
-            resultSet = statement.executeQuery();
-            while(resultSet.next()) {
-                count = resultSet.getInt("count");
-            }
 
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
-        } finally {
-            try {
-                ConnectionCreator.close(connection);
-                ConnectionCreator.close(statement);
-                ConnectionCreator.close(resultSet);
-            } catch(SQLException ignored) {}
-        }
-        return count > 0;
-    }
-
-    public static boolean delete(Integer id) throws DaoException {
+    public static boolean deleteReportById(Integer id) throws DaoException {
         if(!isExists(id)) {
             return false;
         }
@@ -134,23 +112,26 @@ public class ReportDao {
             statement = connection.createStatement();
             String sqlString = "DELETE FROM reports WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
-        } catch (SQLException exception) {
-            throw new DaoException(exception);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch (SQLException ignored) {}
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
 
-    public static boolean isExist(Integer id) throws DaoException {
-        return findEntityById(id) != null;
+    public static boolean isExists(Integer id) throws DaoException {
+        return findReportById(id) != null;
     }
 
-    public static boolean create(Report report) throws DaoException {
-        if(isExist(report.getId())) {
+    public static boolean createReport(Report report) throws DaoException {
+        if(isExists(report.getId())) {
             return false;
         }
         Connection connection = null;
@@ -159,22 +140,25 @@ public class ReportDao {
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
             String sqlString = "INSERT INTO reports(id, creatorid, helperid, status, text, title) VALUES";
-            sqlString += report.toString() + ";";
+            sqlString += report + ";";
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
 
-    public static Report update(Report report) throws DaoException {
+    public static Report updateReport(Report report) throws DaoException {
         if(!isExists(report.getId())) {
-            create(report);
+            createReport(report);
             return report;
         }
         Report reportToUpdate;
@@ -183,7 +167,7 @@ public class ReportDao {
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            reportToUpdate = findEntityById(report.getId());
+            reportToUpdate = findReportById(report.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE reports SET ");
             sqlStringBuilder.append("creatorid='").append(report.getCreator().getId()).append("', ");
             sqlStringBuilder.append("helperid='").append(report.getHelper().getId()).append("', ");
@@ -193,13 +177,15 @@ public class ReportDao {
             sqlStringBuilder.append(" WHERE id=").append(report.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return reportToUpdate;
     }

@@ -8,48 +8,45 @@ import fpmibsu.outloud.entitiy.*;
 
 
 public class GenreDao {
-    private static final String SQL_SELECT_ALL_USERS = 
-                                    "SELECT * FROM genres;";
-    private static final String SQL_SELECT_ALL_ID =
-                                    "SELECT id FROM genres;";
-
     private static Genre makeGenre(ResultSet resultSet) throws DaoException {
-        Genre genre = null;
+        Genre genre;
         try {
             genre = new Genre();
             genre.setId(resultSet.getInt("id"));
             genre.setName(resultSet.getString("name"));
-        } catch (SQLException exception) {
-            throw new DaoException(exception);
+        } catch (SQLException e) {
+            throw new DaoException(e);
         }
         return genre;
     }
 
-    public static List<Genre> findAll() throws DaoException {
+    public static List<Genre> findAllGenres() throws DaoException {
         List<Genre> genres = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement(SQL_SELECT_ALL_USERS);
+            statement = connection.prepareStatement("SELECT * FROM genres;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 genres.add(makeGenre(resultSet));
             }
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return genres;
     }
 
-    public static Genre findEntityById(Integer id) throws DaoException {
+    public static Genre findGenreById(Integer id) throws DaoException {
         Genre genre = null;
         Connection connection = null;
         PreparedStatement statement = null;
@@ -62,19 +59,21 @@ public class GenreDao {
             while(resultSet.next()) {
                 genre = makeGenre(resultSet);
             }
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return genre;
     }
 
-    public static boolean delete(Integer id) throws DaoException {
+    public static boolean deleteGenreById(Integer id) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
@@ -82,18 +81,21 @@ public class GenreDao {
             statement = connection.createStatement();
             String sqlString = "DELETE FROM genres WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
 
-    public static boolean create(Genre entity) throws DaoException {
+    public static boolean createGenre(Genre entity) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
@@ -102,37 +104,42 @@ public class GenreDao {
             String sqlString = "INSERT INTO genres(id, name) VALUES";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
     
-    public static Genre update(Genre entity) throws DaoException {
-        Genre genre = null;
+    public static Genre updateGenre(Genre entity) throws DaoException {
+        Genre genre;
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            genre = findEntityById(entity.getId());
+            genre = findGenreById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE genres SET ");
             sqlStringBuilder.append("name='").append(entity.getName()).append("' ");
             sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);           
             statement.executeUpdate(sqlString);
-        } catch(SQLException exception) {
-            throw new DaoException(exception);
+        } catch(SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
-            } catch(SQLException ignored) {}
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         }
         return genre;
     }

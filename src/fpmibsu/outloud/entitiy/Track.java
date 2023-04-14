@@ -10,6 +10,17 @@ public class Track {
     private String name;
     private Integer playsCount;
 
+    public Track() {}
+
+    public Track(Track toCopy) {
+        this.id = toCopy.getId();
+        this.creator = toCopy.getCreator();
+        this.date = toCopy.getDate();
+        this.genre = toCopy.getGenre();
+        this.name = toCopy.getName();
+        this.playsCount = toCopy.getPlaysCount();
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }

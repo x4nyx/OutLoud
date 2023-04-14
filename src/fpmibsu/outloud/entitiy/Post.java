@@ -8,6 +8,17 @@ public class Post {
     private String text;
     private String title;
 
+    public Post() {}
+
+    public Post(Post toCopy) {
+        this.id = toCopy.getId();
+        this.group = toCopy.getGroup();
+        this.creator = toCopy.getCreator();
+        this.viewCount = toCopy.getViewCount();
+        this.text = toCopy.getText();
+        this.title = toCopy.getTitle();
+    }
+
     public User getCreator() {
         return this.creator;
     }

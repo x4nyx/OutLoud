@@ -9,6 +9,17 @@ public class Report {
     private String text;
     private String title;
 
+    public Report() {}
+
+    public Report(Report toCopy) {
+        this.id = toCopy.getId();
+        this.creator = toCopy.getCreator();
+        this.helper = toCopy.getHelper();
+        this.status = toCopy.getStatus();
+        this.text = toCopy.getText();
+        this.title = toCopy.getTitle();
+    }
+
     public Integer getId() {
         return id;
     }

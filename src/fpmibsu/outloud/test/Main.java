@@ -237,7 +237,37 @@ public class Main {
 
     private static void postTest() throws DaoException {
         System.out.println("5. POST_TEST:");
+        System.out.println("*test 1. findAll:");
         List<Post> posts = PostDao.findAll();
+        for(Post us : posts) {
+            System.out.println(us.toString());
+        }
+        System.out.println("\n*test 2. find_by_id:");
+        Post genre2 = PostDao.findEntityById(2);
+        System.out.println(genre2);
+
+        System.out.println("\n*test 3. create:");
+        Post genre3 = new Post(genre2);
+        genre3.setId(4);
+        genre3.setTitle("CREATED");
+        PostDao.create(genre3);
+        posts = PostDao.findAll();
+        for(Post us : posts) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 4. update:");
+        Post genre4 = new Post(genre3);
+        genre4.setTitle("UPDATED");
+        PostDao.update(genre4);
+        posts = PostDao.findAll();
+        for(Post us : posts) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 5. delete:");
+        PostDao.delete(4);
+        posts = PostDao.findAll();
         for(Post us : posts) {
             System.out.println(us.toString());
         }
@@ -246,7 +276,37 @@ public class Main {
 
     private static void reportTest() throws DaoException {
         System.out.println("6. REPORT_TEST:");
+        System.out.println("*test 1. findAll:");
         List<Report> reportList = ReportDao.findAll();
+        for (Report us : reportList) {
+            System.out.println(us.toString());
+        }
+        System.out.println("\n*test 2. find_by_id:");
+        Report genre2 = ReportDao.findEntityById(2);
+        System.out.println(genre2);
+
+        System.out.println("\n*test 3. create:");
+        Report genre3 = new Report(genre2);
+        genre3.setId(4);
+        genre3.setTitle("CREATED");
+        ReportDao.create(genre3);
+        reportList = ReportDao.findAll();
+        for (Report us : reportList) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 4. update:");
+        Report genre4 = new Report(genre3);
+        genre4.setTitle("UPDATED");
+        ReportDao.update(genre4);
+        reportList = ReportDao.findAll();
+        for (Report us : reportList) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 5. delete:");
+        ReportDao.delete(4);
+        reportList = ReportDao.findAll();
         for (Report us : reportList) {
             System.out.println(us.toString());
         }
@@ -255,9 +315,45 @@ public class Main {
 
     private static void trackTest() throws DaoException {
         System.out.println("7. TRACK_TEST:");
+        System.out.println("*test 1. findAll:");
         List<Track> tracks = TrackDao.findAll();
         for(Track us : tracks) {
             System.out.println(us.toString());
+        }
+        System.out.println("\n*test 2. find_by_id:");
+        Track genre2 = TrackDao.findEntityById(2);
+        System.out.println(genre2);
+
+        System.out.println("\n*test 3. create:");
+        Track genre3 = new Track(genre2);
+        genre3.setId(4);
+        genre3.setName("CREATED");
+        TrackDao.create(genre3);
+        tracks = TrackDao.findAll();
+        for(Track us : tracks) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 4. update:");
+        Track genre4 = new Track(genre3);
+        genre4.setName("UPDATED");
+        TrackDao.update(genre4);
+        tracks = TrackDao.findAll();
+        for(Track us : tracks) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 5. delete:");
+        TrackDao.delete(4);
+        tracks = TrackDao.findAll();
+        for(Track us : tracks) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 6. find_by_name:");
+        List<Track> tracksByName = TrackDao.findTracksByName("top");
+        for(Track track : tracksByName) {
+            System.out.println(track);
         }
         System.out.println("-------------------------------------------------------------\n");
     }
@@ -266,6 +362,9 @@ public class Main {
         //userTest();
         //albumTest();
         //genreTest();
-        groupTest();
+        //groupTest();
+        //postTest();
+        //reportTest();
+        //trackTest();
     }
 }

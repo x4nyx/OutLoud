@@ -105,8 +105,14 @@ public class TrackDao {
         return tracks;
     }
 
+    public static boolean isExist(Integer id) throws DaoException {
+        return findEntityById(id) != null;
+    }
 
     public static boolean create(Track track) throws DaoException{
+        if(isExist(track.getId())) {
+            return false;
+        }
         Connection connection = null;
         Statement statement = null;
         try{
@@ -135,7 +141,7 @@ public class TrackDao {
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
             trackToUpdate = findEntityById(track.getId());
-            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE users SET ");
+            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE tracks SET ");
             sqlStringBuilder.append("creatorid='").append(track.getCreator().getId()).append("', ");
             sqlStringBuilder.append("date='").append(track.getDate()).append("', ");
             sqlStringBuilder.append("genreid='").append(track.getGenre().getId()).append("', ");
@@ -143,7 +149,6 @@ public class TrackDao {
             sqlStringBuilder.append("playsCount='").append(track.getPlaysCount()).append("'");
             sqlStringBuilder.append(" WHERE id=").append(track.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);
-            System.out.println(sqlString);
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
             throw new DaoException(exception);

@@ -92,13 +92,20 @@ public class PostDao {
         return true;
     }
 
-    public boolean create(Post entity) throws DaoException {
+    public static boolean isExist(Integer id) throws DaoException {
+        return findEntityById(id) != null;
+    }
+
+    public static boolean create(Post entity) throws DaoException {
+        if(isExist(entity.getId())) {
+            return false;
+        }
         Connection connection = null;
         Statement statement = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSER INTO posts(id, groupid, creatorid, viewCount, text, title) VALUES";
+            String sqlString = "INSERT INTO posts(id, groupid, creatorid, viewCount, text, title) VALUES";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
@@ -112,7 +119,7 @@ public class PostDao {
         return true;
     }
     
-    public Post update(Post entity) throws DaoException {
+    public static Post update(Post entity) throws DaoException {
         Post post = null;
         Connection connection = null;
         Statement statement = null;

@@ -145,7 +145,14 @@ public class ReportDao {
         return true;
     }
 
+    public static boolean isExist(Integer id) throws DaoException {
+        return findEntityById(id) != null;
+    }
+
     public static boolean create(Report report) throws DaoException {
+        if(isExist(report.getId())) {
+            return false;
+        }
         Connection connection = null;
         Statement statement = null;
         try{
@@ -177,7 +184,7 @@ public class ReportDao {
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
             reportToUpdate = findEntityById(report.getId());
-            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE users SET ");
+            StringBuilder sqlStringBuilder = new StringBuilder("UPDATE reports SET ");
             sqlStringBuilder.append("creatorid='").append(report.getCreator().getId()).append("', ");
             sqlStringBuilder.append("helperid='").append(report.getHelper().getId()).append("', ");
             sqlStringBuilder.append("status='").append(report.getStatus().toString()).append("', ");
@@ -185,7 +192,6 @@ public class ReportDao {
             sqlStringBuilder.append("title='").append(report.getTitle()).append("'");
             sqlStringBuilder.append(" WHERE id=").append(report.getId()).append(";");
             String sqlString = new String(sqlStringBuilder);
-            System.out.println(sqlString);
             statement.executeUpdate(sqlString);
         } catch(SQLException exception) {
             throw new DaoException(exception);

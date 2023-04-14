@@ -11,6 +11,18 @@ public class Group {
     private String description;
     private String name;
 
+    public Group() {}
+
+    public Group(Group toCopy) {
+        this.id = toCopy.getId();
+        this.creator = toCopy.getCreator();
+        this.members = toCopy.getMembers();
+        this.userNum = toCopy.getUserNum();
+        this.isConfirmed = toCopy.getIsConfirmed();
+        this.description = toCopy.getDescription();
+        this.name = toCopy.getName();
+    }
+
     public Integer getId() {
         return id;
     }

@@ -74,7 +74,7 @@ public class GenreDao {
         return genre;
     }
 
-    public boolean delete(Integer id) throws DaoException {
+    public static boolean delete(Integer id) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
@@ -93,7 +93,7 @@ public class GenreDao {
         return true;
     }
 
-    public boolean create(Genre entity) throws DaoException {
+    public static boolean create(Genre entity) throws DaoException {
         Connection connection = null;
         Statement statement = null;
         try{
@@ -113,7 +113,7 @@ public class GenreDao {
         return true;
     }
     
-    public Genre update(Genre entity) throws DaoException {
+    public static Genre update(Genre entity) throws DaoException {
         Genre genre = null;
         Connection connection = null;
         Statement statement = null;

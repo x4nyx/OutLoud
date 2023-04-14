@@ -2,8 +2,7 @@ package fpmibsu.outloud.test;
 
 import fpmibsu.outloud.dao.*;
 import fpmibsu.outloud.entitiy.*;
-import fpmibsu.outloud.enumfiles.Status;
-import fpmibsu.outloud.enumfiles.Type;
+import fpmibsu.outloud.dao.DaoException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,18 +126,111 @@ public class Main {
 
     private static void genreTest() throws DaoException {
         System.out.println("3. GENRE_TEST:");
+        System.out.println("*test 1. findAll:");
         List<Genre> genres = GenreDao.findAll();
         for(Genre us : genres) {
             System.out.println(us.toString());
         }
+        System.out.println("\n*test 2. find_by_id:");
+        Genre genre2 = GenreDao.findEntityById(2);
+        System.out.println(genre2);
+
+        System.out.println("\n*test 3. create:");
+        Genre genre3 = new Genre(genre2);
+        genre3.setId(4);
+        genre3.setName("phonk");
+        GenreDao.create(genre3);
+        genres = GenreDao.findAll();
+        for(Genre us : genres) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 4. update:");
+        Genre genre4 = new Genre(genre3);
+        genre4.setName("UPDATED");
+        GenreDao.update(genre4);
+        genres = GenreDao.findAll();
+        for(Genre us : genres) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 5. delete:");
+        GenreDao.delete(4);
+        genres = GenreDao.findAll();
+        for(Genre us : genres) {
+            System.out.println(us.toString());
+        }
+
         System.out.println("-------------------------------------------------------------\n");
     }
 
     private static void groupTest() throws DaoException {
         System.out.println("4. GROUP_TEST:");
+        System.out.println("*test 1. findAll:");
         List<Group> groups = GroupDao.findAll();
         for(Group us : groups) {
             System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 2. find_by_id:");
+        Group group2 = GroupDao.findEntityById(3);
+        System.out.println(group2);
+
+        System.out.println("\n*test 3. create:");
+        Group group3 = new Group(group2);
+        group3.setId(4);
+        group3.setName("CREATED");
+        GroupDao.create(group3);
+        groups = GroupDao.findAll();
+        for(Group us : groups) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 4. update:");
+        Group group4 = new Group(group3);
+        group4.setName("UPDATED");
+        GroupDao.update(group4);
+        groups = GroupDao.findAll();
+        for(Group us : groups) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 5. delete:");
+        GroupDao.delete(4);
+        groups = GroupDao.findAll();
+        for(Group us : groups) {
+            System.out.println(us.toString());
+        }
+
+        System.out.println("\n*test 6. findAllMembers:");
+        List<User> users = GroupDao.findMembers(1);
+        for(User user : users) {
+            System.out.println(user);
+        }
+
+        System.out.println("\n*test 7. addMember:");
+        GroupDao.addMember(3, 1);
+        users = GroupDao.findMembers(1);
+        for(User user : users) {
+            System.out.println(user);
+        }
+
+        System.out.println("\n*test 8. deleteMember:");
+        GroupDao.deleteMember(3, 1);
+        users = GroupDao.findMembers(1);
+        for(User user : users) {
+            System.out.println(user);
+        }
+
+        System.out.println("\n*test 9. updateMembers:");
+        users = new ArrayList<>();
+        users.add(UserDao.findEntityById(3));
+        users.add(UserDao.findEntityById(2));
+        users.add(UserDao.findEntityById(1));
+        GroupDao.updateGroupMembers(1, users);
+        users = GroupDao.findMembers(1);
+        for(User user : users) {
+            System.out.println(user);
         }
         System.out.println("-------------------------------------------------------------\n");
     }
@@ -173,5 +265,7 @@ public class Main {
     public static void main(String[] args) throws DaoException {
         //userTest();
         //albumTest();
+        //genreTest();
+        groupTest();
     }
 }

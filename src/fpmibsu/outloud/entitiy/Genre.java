@@ -4,6 +4,13 @@ public class Genre {
     private Integer id;
     private String name;
 
+    public Genre() {}
+
+    public Genre(Genre toCopy) {
+        this.id = toCopy.getId();
+        this.name = toCopy.getName();
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }

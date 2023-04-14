@@ -255,17 +255,19 @@ public class GroupDao {
     }
 
     public static boolean createGroup(Group entity) throws DaoException {
-        if(isExist(entity.getId())) {
-            return false;
-        }
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSERT INTO groupst(id, creatorid, userNum, confirmation, description, name) VALUES ";
+            String sqlString = "INSERT INTO groupst(creatorid, userNum, confirmation, description, name) VALUES ";
             sqlString += entity + ";";
             statement.executeUpdate(sqlString);
+            resultSet = statement.executeQuery("SELECT LAST_INSERT_ID();");
+            if(resultSet.next()) {
+                entity.setId(resultSet.getInt("LAST_INSERT_ID()"));
+            }
             updateGroupMembers(entity.getId(), entity.getMembers());
         } catch(SQLException e) {
             e.printStackTrace();
@@ -274,6 +276,7 @@ public class GroupDao {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
                 e.printStackTrace();
             }

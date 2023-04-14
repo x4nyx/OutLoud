@@ -79,7 +79,16 @@ public class Album {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("('").append(getId()).append("', ");
+        stringBuilder.append("('").append(getName()).append("', ");
+        stringBuilder.append("'").append(getIntIsPlayList()).append("', ");
+        stringBuilder.append("'").append(getCreator().getId()).append("', ");
+        stringBuilder.append("'").append(getCreationDate()).append("') ");
+        return new String(stringBuilder);
+    }
+
+    public String view() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("('").append(id).append("', ");
         stringBuilder.append("'").append(getName()).append("', ");
         stringBuilder.append("'").append(getIntIsPlayList()).append("', ");
         stringBuilder.append("'").append(getCreator().getId()).append("', ");

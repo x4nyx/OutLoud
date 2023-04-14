@@ -126,17 +126,19 @@ public class UserDao {
     }
 
     public static boolean createUser(User entity) throws DaoException {
-        if(isExist(entity.getId())) {
-            return false;
-        }
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSERT INTO users(id, name, login, password, role, confirmation) VALUES";
+            String sqlString = "INSERT INTO users(name, login, password, role, confirmation) VALUES";
             sqlString += entity + ";";
             statement.executeUpdate(sqlString);
+            resultSet = statement.executeQuery("SELECT LAST_INSERT_ID();");
+            if(resultSet.next()) {
+                entity.setId(resultSet.getInt("LAST_INSERT_ID()"));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
             return false;
@@ -144,6 +146,7 @@ public class UserDao {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
                 e.printStackTrace();
             }

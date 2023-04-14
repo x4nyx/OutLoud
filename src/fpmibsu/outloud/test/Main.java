@@ -13,36 +13,35 @@ public class Main {
         System.out.println("*test 1. output:");
         List<User> users = UserDao.findAllUsers();
         for(User us : users) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
         System.out.println("\n*test 2. findbyid:");
-        User user2 = UserDao.findUserById(3);
-        System.out.println(user2.toString());
+        User user2 = UserDao.findUserById(1);
+        System.out.println(user2.view());
 
         System.out.println("\n*test 3. create:");
         User userToCreate = new User(user2);
-        userToCreate.setId(4);
         userToCreate.setName("CREATED");
         UserDao.createUser(userToCreate);
         users = UserDao.findAllUsers();
         for(User us : users) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
-        System.out.println("\n*test 4. delete:");
-        UserDao.deleteUserById(4);
-        users = UserDao.findAllUsers();
-        for(User us : users) {
-            System.out.println(us.toString());
-        }
-
-        System.out.println("\n*test 5. update:");
-        User userUpdater = new User(user2);
-        userUpdater.setName("UPDATED KID");
+        System.out.println("\n*test 4. update:");
+        User userUpdater = new User(userToCreate);
+        userUpdater.setName("UPDATED");
         UserDao.updateUser(userUpdater);
         users = UserDao.findAllUsers();
         for(User us : users) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
+        }
+
+        System.out.println("\n*test 5. delete:");
+        UserDao.deleteUserById(userUpdater.getId());
+        users = UserDao.findAllUsers();
+        for(User us : users) {
+            System.out.println(us.view());
         }
         System.out.println("-------------------------------------------------------------\n");
     }
@@ -52,43 +51,42 @@ public class Main {
         System.out.println("*test 1. output:");
         List<Album> albums = AlbumDao.findAllAlbums();
         for(Album us : albums) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 2. find_by_id:");
-        Album album2 = AlbumDao.findAlbumById(3);
-        System.out.println(album2);
+        Album album2 = AlbumDao.findAlbumById(1);
+        System.out.println(album2.view());
 
         System.out.println("\n*test 3. find_by_name:");
         List<Album> album3 = AlbumDao.findAlbumByName("date");
         for(Album us : album3) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 4. create:");
         Album album4 = new Album(album2);
-        album4.setId(4);
         album4.setName("CREATE");
         AlbumDao.createAlbum(album4);
         albums = AlbumDao.findAllAlbums();
         for(Album us : albums) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
-        System.out.println("\n*test 5. delete:");
-        AlbumDao.deleteAlbumById(album4.getId());
-        albums = AlbumDao.findAllAlbums();
-        for(Album us : albums) {
-            System.out.println(us.toString());
-        }
-
-        System.out.println("\n*test 6. update:");
-        Album album6 = new Album(album2);
+        System.out.println("\n*test 5. update:");
+        Album album6 = new Album(album4);
         album6.setName("UPDATED");
         AlbumDao.updateAlbum(album6);
         albums = AlbumDao.findAllAlbums();
         for(Album us : albums) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
+        }
+
+        System.out.println("\n*test 6. delete:");
+        AlbumDao.deleteAlbumById(album6.getId());
+        albums = AlbumDao.findAllAlbums();
+        for(Album us : albums) {
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 7. update_tracks:");
@@ -96,29 +94,29 @@ public class Main {
         tracks.add(TrackDao.findTrackById(1));
         tracks.add(TrackDao.findTrackById(2));
         tracks.add(TrackDao.findTrackById(3));
-        AlbumDao.updateTrackList(2, tracks);
-        tracks = AlbumDao.getTracksFromAlbum(2);
+        AlbumDao.updateTrackList(1, tracks);
+        tracks = AlbumDao.getTracksFromAlbum(1);
         if(tracks != null) {
             for (Track track : tracks) {
-                System.out.println(track);
+                System.out.println(track.view());
             }
         }
 
         System.out.println("\n*test 8. add_track:");
-        AlbumDao.addTrackToAlbum(2, 1);
-        tracks = AlbumDao.getTracksFromAlbum(2);
+        AlbumDao.addTrackToAlbum(1, 1);
+        tracks = AlbumDao.getTracksFromAlbum(1);
         if(tracks != null) {
             for (Track track : tracks) {
-                System.out.println(track);
+                System.out.println(track.view());
             }
         }
 
         System.out.println("\n*test 9. delete_track:");
-        AlbumDao.deleteTrackFromAlbum(2, 1);
-        tracks = AlbumDao.getTracksFromAlbum(2);
+        AlbumDao.deleteTrackFromAlbum(1, 1);
+        tracks = AlbumDao.getTracksFromAlbum(1);
         if(tracks != null) {
             for (Track track : tracks) {
-                System.out.println(track);
+                System.out.println(track.view());
             }
         }
         System.out.println("-------------------------------------------------------------\n");
@@ -129,20 +127,19 @@ public class Main {
         System.out.println("*test 1. findAll:");
         List<Genre> genres = GenreDao.findAllGenres();
         for(Genre us : genres) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
         System.out.println("\n*test 2. find_by_id:");
         Genre genre2 = GenreDao.findGenreById(2);
-        System.out.println(genre2);
+        System.out.println(genre2.view());
 
         System.out.println("\n*test 3. create:");
         Genre genre3 = new Genre(genre2);
-        genre3.setId(4);
         genre3.setName("phonk");
         GenreDao.createGenre(genre3);
         genres = GenreDao.findAllGenres();
         for(Genre us : genres) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 4. update:");
@@ -151,14 +148,14 @@ public class Main {
         GenreDao.updateGenre(genre4);
         genres = GenreDao.findAllGenres();
         for(Genre us : genres) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 5. delete:");
-        GenreDao.deleteGenreById(4);
+        GenreDao.deleteGenreById(genre4.getId());
         genres = GenreDao.findAllGenres();
         for(Genre us : genres) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("-------------------------------------------------------------\n");
@@ -169,21 +166,20 @@ public class Main {
         System.out.println("*test 1. findAll:");
         List<Group> groups = GroupDao.findAllGroups();
         for(Group us : groups) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 2. find_by_id:");
-        Group group2 = GroupDao.findGroupById(3);
-        System.out.println(group2);
+        Group group2 = GroupDao.findGroupById(1);
+        System.out.println(group2.view());
 
         System.out.println("\n*test 3. create:");
         Group group3 = new Group(group2);
-        group3.setId(4);
         group3.setName("CREATED");
         GroupDao.createGroup(group3);
         groups = GroupDao.findAllGroups();
         for(Group us : groups) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 4. update:");
@@ -192,34 +188,34 @@ public class Main {
         GroupDao.updateGroup(group4);
         groups = GroupDao.findAllGroups();
         for(Group us : groups) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 5. delete:");
-        GroupDao.deleteGroupById(4);
+        GroupDao.deleteGroupById(group4.getId());
         groups = GroupDao.findAllGroups();
         for(Group us : groups) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 6. findAllMembers:");
         List<User> users = GroupDao.findMembersInGroup(1);
         for(User user : users) {
-            System.out.println(user);
+            System.out.println(user.view());
         }
 
         System.out.println("\n*test 7. addMember:");
-        GroupDao.addMemberToGroup(3, 1);
+        GroupDao.addMemberToGroup(2, 1);
         users = GroupDao.findMembersInGroup(1);
         for(User user : users) {
-            System.out.println(user);
+            System.out.println(user.view());
         }
 
         System.out.println("\n*test 8. deleteMember:");
-        GroupDao.deleteMemberFromGroup(3, 1);
+        GroupDao.deleteMemberFromGroup(2, 1);
         users = GroupDao.findMembersInGroup(1);
         for(User user : users) {
-            System.out.println(user);
+            System.out.println(user.view());
         }
 
         System.out.println("\n*test 9. updateMembers:");
@@ -230,7 +226,7 @@ public class Main {
         GroupDao.updateGroupMembers(1, users);
         users = GroupDao.findMembersInGroup(1);
         for(User user : users) {
-            System.out.println(user);
+            System.out.println(user.view());
         }
         System.out.println("-------------------------------------------------------------\n");
     }
@@ -240,20 +236,19 @@ public class Main {
         System.out.println("*test 1. findAll:");
         List<Post> posts = PostDao.findAllPosts();
         for(Post us : posts) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
         System.out.println("\n*test 2. find_by_id:");
-        Post genre2 = PostDao.findPostById(2);
-        System.out.println(genre2);
+        Post genre2 = PostDao.findPostById(1);
+        System.out.println(genre2.view());
 
         System.out.println("\n*test 3. create:");
         Post genre3 = new Post(genre2);
-        genre3.setId(4);
         genre3.setTitle("CREATED");
         PostDao.createPost(genre3);
         posts = PostDao.findAllPosts();
         for(Post us : posts) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 4. update:");
@@ -262,14 +257,14 @@ public class Main {
         PostDao.updatePost(genre4);
         posts = PostDao.findAllPosts();
         for(Post us : posts) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 5. delete:");
-        PostDao.deletePostById(4);
+        PostDao.deletePostById(genre4.getId());
         posts = PostDao.findAllPosts();
         for(Post us : posts) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
         System.out.println("-------------------------------------------------------------\n");
     }
@@ -279,20 +274,19 @@ public class Main {
         System.out.println("*test 1. findAll:");
         List<Report> reportList = ReportDao.findAllReports();
         for (Report us : reportList) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
         System.out.println("\n*test 2. find_by_id:");
-        Report genre2 = ReportDao.findReportById(2);
-        System.out.println(genre2);
+        Report genre2 = ReportDao.findReportById(1);
+        System.out.println(genre2.view());
 
         System.out.println("\n*test 3. create:");
         Report genre3 = new Report(genre2);
-        genre3.setId(4);
         genre3.setTitle("CREATED");
         ReportDao.createReport(genre3);
         reportList = ReportDao.findAllReports();
         for (Report us : reportList) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 4. update:");
@@ -301,14 +295,14 @@ public class Main {
         ReportDao.updateReport(genre4);
         reportList = ReportDao.findAllReports();
         for (Report us : reportList) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 5. delete:");
-        ReportDao.deleteReportById(4);
+        ReportDao.deleteReportById(genre4.getId());
         reportList = ReportDao.findAllReports();
         for (Report us : reportList) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
         System.out.println("-------------------------------------------------------------\n");
     }
@@ -318,20 +312,19 @@ public class Main {
         System.out.println("*test 1. findAll:");
         List<Track> tracks = TrackDao.findAllTracks();
         for(Track us : tracks) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
         System.out.println("\n*test 2. find_by_id:");
-        Track genre2 = TrackDao.findTrackById(2);
-        System.out.println(genre2);
+        Track genre2 = TrackDao.findTrackById(1);
+        System.out.println(genre2.view());
 
         System.out.println("\n*test 3. create:");
         Track genre3 = new Track(genre2);
-        genre3.setId(4);
         genre3.setName("CREATED");
         TrackDao.createTrack(genre3);
         tracks = TrackDao.findAllTracks();
         for(Track us : tracks) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 4. update:");
@@ -340,31 +333,31 @@ public class Main {
         TrackDao.updateTrack(genre4);
         tracks = TrackDao.findAllTracks();
         for(Track us : tracks) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 5. delete:");
-        TrackDao.deleteTrackById(4);
+        TrackDao.deleteTrackById(genre4.getId());
         tracks = TrackDao.findAllTracks();
         for(Track us : tracks) {
-            System.out.println(us.toString());
+            System.out.println(us.view());
         }
 
         System.out.println("\n*test 6. find_by_name:");
         List<Track> tracksByName = TrackDao.findTracksByName("top");
         for(Track track : tracksByName) {
-            System.out.println(track);
+            System.out.println(track.view());
         }
         System.out.println("-------------------------------------------------------------\n");
     }
 
     public static void main(String[] args) throws DaoException {
-        //userTest();
-        //albumTest();
-        //genreTest();
-        //groupTest();
-        //postTest();
-        //reportTest();
-        //trackTest();
+        userTest();
+        albumTest();
+        genreTest();
+        groupTest();
+        postTest();
+        reportTest();
+        trackTest();
     }
 }

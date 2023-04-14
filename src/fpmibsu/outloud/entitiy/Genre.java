@@ -29,7 +29,14 @@ public class Genre {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("('").append(id).append("', '").append(name).append("')");
+        stringBuilder.append("('").append(name).append("')");
+        return new String(stringBuilder);
+    }
+
+    public String view() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("('").append(id).append("', ");
+        stringBuilder.append("'").append(name).append("')");
         return new String(stringBuilder);
     }
 }

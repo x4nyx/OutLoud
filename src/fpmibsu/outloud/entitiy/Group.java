@@ -88,6 +88,16 @@ public class Group {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("('").append(creator.getId()).append("', ");
+        stringBuilder.append("'").append(userNum).append("', ");
+        stringBuilder.append("'").append(getIntConfirmation()).append("', ");
+        stringBuilder.append("'").append(description).append("', ");
+        stringBuilder.append("'").append(name).append("')");
+        return new String(stringBuilder);
+    }
+
+    public String view() {
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("('").append(id).append("', ");
         stringBuilder.append("'").append(creator.getId()).append("', ");
         stringBuilder.append("'").append(userNum).append("', ");

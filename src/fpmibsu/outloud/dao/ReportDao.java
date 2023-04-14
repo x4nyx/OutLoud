@@ -131,17 +131,19 @@ public class ReportDao {
     }
 
     public static boolean createReport(Report report) throws DaoException {
-        if(isExists(report.getId())) {
-            return false;
-        }
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSERT INTO reports(id, creatorid, helperid, status, text, title) VALUES";
+            String sqlString = "INSERT INTO reports(creatorid, helperid, status, text, title) VALUES";
             sqlString += report + ";";
             statement.executeUpdate(sqlString);
+            resultSet = statement.executeQuery("SELECT LAST_INSERT_ID();");
+            if(resultSet.next()) {
+                report.setId(resultSet.getInt("LAST_INSERT_ID()"));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
             return false;
@@ -149,6 +151,7 @@ public class ReportDao {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
                 e.printStackTrace();
             }

@@ -69,6 +69,16 @@ public class Track {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("('").append(creator.getId()).append("', ");
+        stringBuilder.append("'").append(date).append("', ");
+        stringBuilder.append("'").append(genre.getId()).append("', ");
+        stringBuilder.append("'").append(name).append("', ");
+        stringBuilder.append("'").append(playsCount).append("')");
+        return new String(stringBuilder);
+    }
+
+    public String view() {
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("('").append(id).append("', ");
         stringBuilder.append("'").append(creator.getId()).append("', ");
         stringBuilder.append("'").append(date).append("', ");

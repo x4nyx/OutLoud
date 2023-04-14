@@ -70,7 +70,17 @@ public class Report {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("('").append(id).append("', ");
+        stringBuilder.append("('").append(creator.getId()).append("', ");
+        stringBuilder.append("'").append(helper.getId()).append("', ");
+        stringBuilder.append("'").append(status.toString()).append("', ");
+        stringBuilder.append("'").append(text).append("', ");
+        stringBuilder.append("'").append(title).append("')");
+        return new String(stringBuilder);
+    }
+
+    public String view() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("('").append(getId()).append("', ");
         stringBuilder.append("'").append(creator.getId()).append("', ");
         stringBuilder.append("'").append(helper.getId()).append("', ");
         stringBuilder.append("'").append(status.toString()).append("', ");

@@ -348,17 +348,19 @@ public class AlbumDao {
     }
 
     public static boolean createAlbum(Album album) throws DaoException {
-        if(isExist(album.getId())) {
-            return false;
-        }
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSERT INTO albums(id, name, isPlaylist, creatorid, creationDate) VALUES ";
+            String sqlString = "INSERT INTO albums(name, isPlaylist, creatorid, creationDate) VALUES ";
             sqlString += album + ";";
             statement.executeUpdate(sqlString);
+            resultSet = statement.executeQuery("SELECT LAST_INSERT_ID();");
+            if(resultSet.next()) {
+                album.setId(resultSet.getInt("LAST_INSERT_ID()"));
+            }
             updateTrackList(album.getId(), album.getTrackList());
         } catch(SQLException e) {
             e.printStackTrace();
@@ -367,6 +369,7 @@ public class AlbumDao {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
                 e.printStackTrace();
             }

@@ -69,6 +69,16 @@ public class Post {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("('").append(group.getId()).append("', ");
+        stringBuilder.append("'").append(creator.getId()).append("', ");
+        stringBuilder.append("'").append(viewCount).append("', ");
+        stringBuilder.append("'").append(text).append("', ");
+        stringBuilder.append("'").append(title).append("')");
+        return new String(stringBuilder);
+    }
+
+    public String view() {
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("('").append(id).append("', ");
         stringBuilder.append("'").append(group.getId()).append("', ");
         stringBuilder.append("'").append(creator.getId()).append("', ");

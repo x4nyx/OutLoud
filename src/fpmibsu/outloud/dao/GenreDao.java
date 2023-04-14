@@ -98,12 +98,17 @@ public class GenreDao {
     public static boolean createGenre(Genre entity) throws DaoException {
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSERT INTO genres(id, name) VALUES";
+            String sqlString = "INSERT INTO genres(name) VALUES";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
+            resultSet = statement.executeQuery("SELECT LAST_INSERT_ID();");
+            if(resultSet.next()) {
+                entity.setId(resultSet.getInt("LAST_INSERT_ID()"));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
             return false;
@@ -111,6 +116,7 @@ public class GenreDao {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
                 e.printStackTrace();
             }

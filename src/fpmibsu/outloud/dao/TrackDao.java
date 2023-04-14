@@ -109,17 +109,19 @@ public class TrackDao {
     }
 
     public static boolean createTrack(Track track) throws DaoException{
-        if(isExists(track.getId())) {
-            return false;
-        }
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try{
             connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
-            String sqlString = "INSERT INTO tracks(id, creatorid, date, genreid, name, playsCount) VALUES";
+            String sqlString = "INSERT INTO tracks(creatorid, date, genreid, name, playsCount) VALUES";
             sqlString += track + ";";
             statement.executeUpdate(sqlString);
+            resultSet = statement.executeQuery("SELECT LAST_INSERT_ID();");
+            if(resultSet.next()) {
+                track.setId(resultSet.getInt("LAST_INSERT_ID()"));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
             return false;
@@ -127,6 +129,7 @@ public class TrackDao {
             try {
                 ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
                 e.printStackTrace();
             }

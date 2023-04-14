@@ -75,17 +75,22 @@ public class User {
     }
 
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("(");
-        stringBuilder.append(id).append(", ");
+        StringBuilder stringBuilder = new StringBuilder("('").append(name).append("', ");
+        stringBuilder.append("'").append(login).append("', ");
+        stringBuilder.append("'").append(password).append("', ");
+        stringBuilder.append("'").append(role).append("', ");
+        stringBuilder.append(getIntConfirmation()).append(")");
+        return new String(stringBuilder);
+    }
+
+    public String view() {
+        StringBuilder stringBuilder = new StringBuilder("('");
+        stringBuilder.append(id).append("', ");
         stringBuilder.append("'").append(name).append("', ");
         stringBuilder.append("'").append(login).append("', ");
         stringBuilder.append("'").append(password).append("', ");
         stringBuilder.append("'").append(role).append("', ");
-        int temp = 0;
-        if(isConfirmed) {
-            temp = 1;
-        }
-        stringBuilder.append(temp).append(")");
+        stringBuilder.append(getIntConfirmation()).append(")");
         return new String(stringBuilder);
     }
 }

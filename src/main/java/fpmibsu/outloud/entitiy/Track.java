@@ -78,13 +78,13 @@ public class Track {
     }
 
     public String view() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("('").append(id).append("', ");
-        stringBuilder.append("'").append(creator.getId()).append("', ");
-        stringBuilder.append("'").append(date).append("', ");
-        stringBuilder.append("'").append(genre.getId()).append("', ");
-        stringBuilder.append("'").append(name).append("', ");
-        stringBuilder.append("'").append(playsCount).append("')");
+        StringBuilder stringBuilder = new StringBuilder("Track");
+        stringBuilder.append("(id:'").append(id).append("', ");
+        stringBuilder.append("creatorid:'").append(creator.getId()).append("', ");
+        stringBuilder.append("date:'").append(date).append("', ");
+        stringBuilder.append("genreid:'").append(genre.getId()).append("', ");
+        stringBuilder.append("name:'").append(name).append("', ");
+        stringBuilder.append("playsCount:'").append(playsCount).append("')");
         return new String(stringBuilder);
     }
 }

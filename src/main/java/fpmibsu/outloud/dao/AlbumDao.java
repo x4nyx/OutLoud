@@ -9,27 +9,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AlbumDao {
-    public static List<Track> findAllTracksInAlbum(Integer albumid) throws DaoException {
+public class AlbumDao extends AbstractDao{
+    public AlbumDao() {super();}
+    public AlbumDao(Connection connection) {
+        super(connection);
+    }
+
+    public List<Track> findAllTracksInAlbum(Integer albumid) throws DaoException {
         List<Track> tracks = new ArrayList<>();
-        Connection connection = null;
+        TrackDao trackDao = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         String SQL_GROUPMEMBERS = "SELECT * FROM tracklist WHERE tracklist.albumid=";
         try {
-            connection = ConnectionCreator.createConnection();
             String sqString = SQL_GROUPMEMBERS + albumid + ";";
-            statement = connection.prepareStatement(sqString);
+            statement = this.connection.prepareStatement(sqString);
             resultSet = statement.executeQuery();
+            trackDao = new TrackDao(ConnectionCreator.createConnection());
             while(resultSet.next()) {
-                tracks.add(TrackDao.findTrackById(resultSet.getInt("trackid")));
+                tracks.add(trackDao.findTrackById(resultSet.getInt("trackid")));
             }
         } catch(SQLException e) {
             throw new DaoException(e);
         } finally {
             try {
+                ConnectionCreator.close(trackDao);
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -38,12 +43,10 @@ public class AlbumDao {
         return tracks;
     }
 
-    public static boolean addTrackToAlbum(Integer albumid, Integer trackid) {
-        Connection connection = null;
+    public boolean addTrackToAlbum(Integer albumid, Integer trackid) {
         Statement statement = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "INSERT INTO tracklist(albumid, trackid) VALUES ";
             sqlString += "('" + albumid + "', '" + trackid + "');";
             statement.executeUpdate(sqlString);
@@ -52,7 +55,6 @@ public class AlbumDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -61,12 +63,10 @@ public class AlbumDao {
         return true;
     }
 
-    public static boolean deleteTrackFromAlbum(Integer albumid, Integer trackid) {
-        Connection connection = null;
+    public boolean deleteTrackFromAlbum(Integer albumid, Integer trackid) {
         Statement statement = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "DELETE FROM tracklist WHERE albumid=" + albumid + " AND trackid=" +
                     trackid + ";";
             statement.executeUpdate(sqlString);
@@ -75,7 +75,6 @@ public class AlbumDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -84,14 +83,12 @@ public class AlbumDao {
         return true;
     }
 
-    public static boolean isAlbumTrackListEmpty(Integer albumid) throws DaoException {
+    public boolean isAlbumTrackListEmpty(Integer albumid) throws DaoException {
         int count = 0;
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT COUNT(*) AS count FROM tracklist WHERE albumid=" + albumid + ";");
+            statement = this.connection.prepareStatement("SELECT COUNT(*) AS count FROM tracklist WHERE albumid=" + albumid + ";");
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 count = resultSet.getInt("count");
@@ -101,7 +98,6 @@ public class AlbumDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -110,28 +106,28 @@ public class AlbumDao {
         return count <= 0;
     }
 
-    public static List<Track> getTracksFromAlbum(Integer albumid) throws DaoException {
+    public List<Track> getTracksFromAlbum(Integer albumid) throws DaoException {
         if(isAlbumTrackListEmpty(albumid)) {
             return null;
         }
         List<Track> tracks = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
+        TrackDao trackDao = new TrackDao();
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM tracklist WHERE albumid=" +albumid + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM tracklist WHERE albumid=" +albumid + ";");
             resultSet = statement.executeQuery();
+            trackDao.createConnection();
             while(resultSet.next()) {
                 Integer id = resultSet.getInt("trackid");
-                tracks.add(TrackDao.findTrackById(id));
+                tracks.add(trackDao.findTrackById(id));
             }
         } catch(SQLException e) {
             throw new DaoException(e);
         } finally {
             try {
+                ConnectionCreator.close(trackDao);
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException ignored) {}
         }
@@ -139,28 +135,29 @@ public class AlbumDao {
     }
 
 
-    public static Album makeAlbum(ResultSet resultSet) throws SQLException, DaoException {
+    public Album makeAlbum(ResultSet resultSet) throws SQLException, DaoException {
+        UserDao userDao = new UserDao();
+        userDao.createConnection();
         Album album = new Album();
         album.setId(resultSet.getInt("id"));
         album.setName(resultSet.getString("name"));
-        album.setCreator(UserDao.findUserById(resultSet.getInt("creatorid")));
+        album.setCreator(userDao.findUserById(resultSet.getInt("creatorid")));
         album.setCreationDate(resultSet.getDate("creationDate"));
         album.setIsPlaylist(resultSet.getInt("isPlaylist") == 1);
         album.setTrackList(getTracksFromAlbum(album.getId()));
+        ConnectionCreator.close(userDao);
         return album;
     }
 
-    public static boolean isExist(Integer albumid) throws DaoException{
+    public boolean isExist(Integer albumid) throws DaoException{
         return findAlbumById(albumid) != null;
     }
-    public static List<Album> findAllAlbums() throws DaoException {
+    public List<Album> findAllAlbums() throws DaoException {
         List<Album> albums = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM albums;");
+            statement = this.connection.prepareStatement("SELECT * FROM albums;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 albums.add(makeAlbum(resultSet));
@@ -170,7 +167,6 @@ public class AlbumDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -179,14 +175,12 @@ public class AlbumDao {
         return albums;
     }
 
-    public static Album findAlbumById(Integer id) throws DaoException {
+    public Album findAlbumById(Integer id) throws DaoException {
         Album album = null;
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM albums WHERE id=" + id + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM albums WHERE id=" + id + ";");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 album = makeAlbum(resultSet);
@@ -196,7 +190,6 @@ public class AlbumDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -205,16 +198,14 @@ public class AlbumDao {
         return album;
     }
 
-    public static List<Album> findAlbumByName(String nameSubstr) throws DaoException {
+    public List<Album> findAlbumByName(String nameSubstr) throws DaoException {
         List<Album> albums = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
             String sqlString = "SELECT * FROM albums WHERE LOWER(name) LIKE '%"
                     + nameSubstr + "%';";
-            statement = connection.prepareStatement(sqlString);
+            statement = this.connection.prepareStatement(sqlString);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 albums.add(makeAlbum(resultSet));
@@ -224,7 +215,6 @@ public class AlbumDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -233,11 +223,9 @@ public class AlbumDao {
         return albums;
     }
 
-    public static boolean deleteAlbumById(Integer id) throws DaoException {
-        Connection connection = null;
+    public boolean deleteAlbumById(Integer id) throws DaoException {
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
             statement = connection.createStatement();
             String sqlString = "DELETE FROM albums WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
@@ -248,7 +236,6 @@ public class AlbumDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -257,16 +244,14 @@ public class AlbumDao {
         return true;
     }
 
-    public static Album updateAlbum(Album album) throws DaoException {
+    public Album updateAlbum(Album album) throws DaoException {
         if(!isExist(album.getId())) {
             return null;
         }
         Album albumToUpdate;
-        Connection connection = null;
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             albumToUpdate = findAlbumById(album.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE albums SET ");
             sqlStringBuilder.append("name='").append(album.getName()).append("', ");
@@ -280,7 +265,6 @@ public class AlbumDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -288,16 +272,14 @@ public class AlbumDao {
         }
         return albumToUpdate;
     }
-    public static boolean deleteAllTracksFromAlbum(Integer albumid) throws DaoException{
+    public boolean deleteAllTracksFromAlbum(Integer albumid) throws DaoException{
         if(isAlbumTrackListEmpty(albumid)) {
             return false;
         }
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM tracklist WHERE albumid=" +albumid + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM tracklist WHERE albumid=" +albumid + ";");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 Integer id = resultSet.getInt("trackid");
@@ -309,7 +291,6 @@ public class AlbumDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -318,16 +299,14 @@ public class AlbumDao {
         return true;
     }
 
-    public static boolean updateTrackList(Integer albumid, List<Track> tracks) throws DaoException{
+    public boolean updateTrackList(Integer albumid, List<Track> tracks) throws DaoException{
         if(tracks == null || tracks.isEmpty()) {
             return false;
         }
         deleteAllTracksFromAlbum(albumid);
-        Connection connection = null;
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             for(Track track : tracks) {
                 String sqlString = "INSERT INTO tracklist(albumid, trackid) VALUES";
                 sqlString += "('" + albumid + "', '" + track.getId() + "');";
@@ -338,7 +317,6 @@ public class AlbumDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -347,13 +325,11 @@ public class AlbumDao {
         return true;
     }
 
-    public static boolean createAlbum(Album album) throws DaoException {
-        Connection connection = null;
+    public boolean createAlbum(Album album) throws DaoException {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "INSERT INTO albums(name, isPlaylist, creatorid, creationDate) VALUES ";
             sqlString += album + ";";
             statement.executeUpdate(sqlString);
@@ -367,7 +343,6 @@ public class AlbumDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {

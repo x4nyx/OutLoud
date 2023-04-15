@@ -6,27 +6,31 @@ import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 import fpmibsu.outloud.enumfiles.Status;
 
-//TO-DO
-public class ReportDao {
-    private static Report makeReport(ResultSet resultSet) throws SQLException, DaoException {
+public class ReportDao extends AbstractDao{
+    public ReportDao() {super();}
+    public ReportDao(Connection connection) {
+        super(connection);
+    }
+
+    private Report makeReport(ResultSet resultSet) throws SQLException, DaoException {
         Report report = new Report();
+        UserDao userDao = new UserDao(ConnectionCreator.createConnection());
         report.setId(resultSet.getInt("id"));
-        report.setCreator(UserDao.findUserById(resultSet.getInt("creatorid")));
-        report.setHelper(UserDao.findUserById(resultSet.getInt("helperid")));
+        report.setCreator(userDao.findUserById(resultSet.getInt("creatorid")));
+        report.setHelper(userDao.findUserById(resultSet.getInt("helperid")));
         report.setStatus(Status.fromString(resultSet.getString("status")));
         report.setText(resultSet.getString("text"));
         report.setTitle(resultSet.getString("title"));
+        ConnectionCreator.close(userDao);
         return report;
     }
 
-    public static List<Report> findAllReports() throws DaoException {
+    public List<Report> findAllReports() throws DaoException {
         List<Report> reports = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM reports;");
+            statement = this.connection.prepareStatement("SELECT * FROM reports;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 Report report = makeReport(resultSet);
@@ -36,7 +40,6 @@ public class ReportDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -46,15 +49,13 @@ public class ReportDao {
         return reports;
     }
 
-    public static List<Report> findAllByStatus(Status status) throws DaoException {
+    public List<Report> findAllByStatus(Status status) throws DaoException {
         List<Report> reports = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
             String sqlString = "SELECT * FROM reports WHERE status='" + status.toString() + "';";
-            statement = connection.prepareStatement(sqlString);
+            statement = this.connection.prepareStatement(sqlString);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 Report report = makeReport(resultSet);
@@ -64,7 +65,6 @@ public class ReportDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -74,14 +74,12 @@ public class ReportDao {
         return reports;
     }
 
-    public static Report findReportById(Integer id) throws DaoException{
+    public Report findReportById(Integer id) throws DaoException{
         Report report = null;
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM reports WHERE id=" + id + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM reports WHERE id=" + id + ";");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 report = makeReport(resultSet);
@@ -90,7 +88,6 @@ public class ReportDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -101,15 +98,13 @@ public class ReportDao {
     }
 
 
-    public static boolean deleteReportById(Integer id) throws DaoException {
+    public boolean deleteReportById(Integer id) throws DaoException {
         if(!isExists(id)) {
             return false;
         }
-        Connection connection = null;
         Statement statement = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "DELETE FROM reports WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
         } catch (SQLException e) {
@@ -117,7 +112,6 @@ public class ReportDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -126,17 +120,15 @@ public class ReportDao {
         return true;
     }
 
-    public static boolean isExists(Integer id) throws DaoException {
+    public boolean isExists(Integer id) throws DaoException {
         return findReportById(id) != null;
     }
 
-    public static boolean createReport(Report report) throws DaoException {
-        Connection connection = null;
+    public boolean createReport(Report report) throws DaoException {
         Statement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "INSERT INTO reports(creatorid, helperid, status, text, title) VALUES";
             sqlString += report + ";";
             statement.executeUpdate(sqlString);
@@ -149,7 +141,6 @@ public class ReportDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -159,17 +150,15 @@ public class ReportDao {
         return true;
     }
 
-    public static Report updateReport(Report report) throws DaoException {
+    public Report updateReport(Report report) throws DaoException {
         if(!isExists(report.getId())) {
             createReport(report);
             return report;
         }
         Report reportToUpdate;
-        Connection connection = null;
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             reportToUpdate = findReportById(report.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE reports SET ");
             sqlStringBuilder.append("creatorid='").append(report.getCreator().getId()).append("', ");
@@ -184,7 +173,6 @@ public class ReportDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();

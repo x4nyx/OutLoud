@@ -34,9 +34,9 @@ public class Genre {
     }
 
     public String view() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("('").append(id).append("', ");
-        stringBuilder.append("'").append(name).append("')");
+        StringBuilder stringBuilder = new StringBuilder("Genre: ");
+        stringBuilder.append("(id:'").append(id).append("', ");
+        stringBuilder.append("name:'").append(name).append("')");
         return new String(stringBuilder);
     }
 }

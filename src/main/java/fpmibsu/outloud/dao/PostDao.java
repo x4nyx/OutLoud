@@ -7,26 +7,33 @@ import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 
 
-public class PostDao {
-    private static Post makePost(ResultSet resultSet) throws SQLException, DaoException {
+public class PostDao extends AbstractDao{
+    public PostDao() {super();}
+    public PostDao(Connection connection) {
+        super(connection);
+    }
+
+    private Post makePost(ResultSet resultSet) throws SQLException, DaoException {
         Post post = new Post();
+        UserDao userDao = new UserDao(ConnectionCreator.createConnection());
+        GroupDao groupDao = new GroupDao(ConnectionCreator.createConnection());
         post.setId(resultSet.getInt("id"));
-        post.setCreator(UserDao.findUserById(resultSet.getInt("creatorid")));
+        post.setCreator(userDao.findUserById(resultSet.getInt("creatorid")));
         post.setText(resultSet.getString("text"));
         post.setTitle(resultSet.getString("title"));
         post.setViewCount(resultSet.getInt("viewCount"));
-        post.setGroup(GroupDao.findGroupById(resultSet.getInt("groupid")));
+        post.setGroup(groupDao.findGroupById(resultSet.getInt("groupid")));
+        ConnectionCreator.close(userDao);
+        ConnectionCreator.close(groupDao);
         return post;
     }
 
-    public static List<Post> findAllPosts() throws DaoException {
+    public List<Post> findAllPosts() throws DaoException {
         List<Post> posts = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM posts;");
+            statement = this.connection.prepareStatement("SELECT * FROM posts;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 Post post = makePost(resultSet);
@@ -36,7 +43,6 @@ public class PostDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -46,14 +52,12 @@ public class PostDao {
         return posts;
     }
 
-    public static Post findPostById(Integer id) throws DaoException {
+    public Post findPostById(Integer id) throws DaoException {
         Post post = null;
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM posts WHERE id=" + id);
+            statement = this.connection.prepareStatement("SELECT * FROM posts WHERE id=" + id);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 post = makePost(resultSet);
@@ -62,7 +66,6 @@ public class PostDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -72,12 +75,10 @@ public class PostDao {
         return post;
     }
 
-    public static boolean deletePostById(Integer id) throws DaoException {
-        Connection connection = null;
+    public boolean deletePostById(Integer id) throws DaoException {
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "DELETE FROM posts WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
         } catch(SQLException e) {
@@ -85,7 +86,6 @@ public class PostDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -94,17 +94,15 @@ public class PostDao {
         return true;
     }
 
-    public static boolean isExist(Integer id) throws DaoException {
+    public boolean isExist(Integer id) throws DaoException {
         return findPostById(id) != null;
     }
 
-    public static boolean createPost(Post entity) throws DaoException {
-        Connection connection = null;
+    public boolean createPost(Post entity) throws DaoException {
         Statement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "INSERT INTO posts(groupid, creatorid, viewCount, text, title) VALUES";
             sqlString += entity + ";";
             statement.executeUpdate(sqlString);
@@ -117,7 +115,6 @@ public class PostDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -127,13 +124,11 @@ public class PostDao {
         return true;
     }
     
-    public static Post updatePost(Post entity) throws DaoException {
+    public Post updatePost(Post entity) throws DaoException {
         Post post;
-        Connection connection = null;
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             post = findPostById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE posts SET ");
             sqlStringBuilder.append("groupid='").append(entity.getGroup().getId()).append("', ");
@@ -148,7 +143,6 @@ public class PostDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();

@@ -1,4 +1,5 @@
 package fpmibsu.outloud.connectioncreator;
+import fpmibsu.outloud.dao.AbstractDao;
 import java.sql.*;
 
 
@@ -17,10 +18,11 @@ public class ConnectionCreator{
         return connection;
     }
 
-    public static void close(Connection connection) throws SQLException{
-        if(connection != null) {
-            connection.close();
+    public static boolean close(AbstractDao object){
+        if(object != null) {
+            return object.closeConnection();
         }
+        return false;
     }
 
     public static void close(ResultSet resultSet) throws SQLException {

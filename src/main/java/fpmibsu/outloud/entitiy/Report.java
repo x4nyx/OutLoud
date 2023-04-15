@@ -79,13 +79,13 @@ public class Report {
     }
 
     public String view() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("('").append(getId()).append("', ");
-        stringBuilder.append("'").append(creator.getId()).append("', ");
-        stringBuilder.append("'").append(helper.getId()).append("', ");
-        stringBuilder.append("'").append(status.toString()).append("', ");
-        stringBuilder.append("'").append(text).append("', ");
-        stringBuilder.append("'").append(title).append("')");
+        StringBuilder stringBuilder = new StringBuilder("Report: ");
+        stringBuilder.append("(id:'").append(getId()).append("', ");
+        stringBuilder.append("creatorid:'").append(creator.getId()).append("', ");
+        stringBuilder.append("helperid:'").append(helper.getId()).append("', ");
+        stringBuilder.append("status:'").append(status.toString()).append("', ");
+        stringBuilder.append("text:'").append(text).append("', ");
+        stringBuilder.append("title:'").append(title).append("')");
         return new String(stringBuilder);
     }
 }

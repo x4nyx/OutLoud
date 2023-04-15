@@ -87,12 +87,12 @@ public class Album {
     }
 
     public String view() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("('").append(id).append("', ");
-        stringBuilder.append("'").append(getName()).append("', ");
-        stringBuilder.append("'").append(getIntIsPlayList()).append("', ");
-        stringBuilder.append("'").append(getCreator().getId()).append("', ");
-        stringBuilder.append("'").append(getCreationDate()).append("') ");
+        StringBuilder stringBuilder = new StringBuilder("Album: ");
+        stringBuilder.append("(id:'").append(id).append("', ");
+        stringBuilder.append("name:'").append(getName()).append("', ");
+        stringBuilder.append("isPlaylist:'").append(getIsPlaylist()).append("', ");
+        stringBuilder.append("creatorid:'").append(getCreator().getId()).append("', ");
+        stringBuilder.append("creationdate:'").append(getCreationDate()).append("') ");
         return new String(stringBuilder);
     }
 }

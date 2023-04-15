@@ -6,28 +6,33 @@ import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 
 
-public class GroupDao {
-    public static List<User> findMembersInGroup(Integer groupid) throws DaoException {
+public class GroupDao extends AbstractDao{
+    public GroupDao() {super();}
+    public GroupDao(Connection connection) {
+        super(connection);
+    }
+
+    public List<User> findMembersInGroup(Integer groupid) throws DaoException {
+        UserDao userDao = new UserDao();
         List<User> users = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         String SQL_GROUPMEMBERS = "SELECT * FROM groupmembers WHERE groupmembers.groupid=";
         try {
-            connection = ConnectionCreator.createConnection();
             String sqString = SQL_GROUPMEMBERS + groupid + ";";
-            statement = connection.prepareStatement(sqString);
+            statement = this.connection.prepareStatement(sqString);
             resultSet = statement.executeQuery();
+            userDao.createConnection();
             while(resultSet.next()) {
-                User user = UserDao.findUserById(resultSet.getInt("userid"));
+                User user = userDao.findUserById(resultSet.getInt("userid"));
                 users.add(user);
             }
         } catch(SQLException e) {
             throw new DaoException(e);
         } finally {
             try {
+                ConnectionCreator.close(userDao);
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -36,30 +41,31 @@ public class GroupDao {
         return users;
     }
 
-    private static Group makeGroup(ResultSet resultSet) throws DaoException {
+    private Group makeGroup(ResultSet resultSet) throws DaoException {
         Group group = new Group();
+        UserDao userDao = new UserDao();
         try {
+            userDao.createConnection();
             group.setId(resultSet.getInt("id"));
             group.setName(resultSet.getString("name"));
-            group.setCreator(UserDao.findUserById(resultSet.getInt("creatorid")));
+            group.setCreator(userDao.findUserById(resultSet.getInt("creatorid")));
             group.setUserNum(resultSet.getInt("userNum"));
             group.setIsConfirmed(resultSet.getInt("confirmation") == 1);
             group.setDescription(resultSet.getString("description"));
             group.setMembers(findMembersInGroup(group.getId()));
+            ConnectionCreator.close(userDao);
         } catch (SQLException e) {
             throw new DaoException(e);
         }
         return group;
     }
 
-    public static List<Group> findAllGroups() throws DaoException {
+    public List<Group> findAllGroups() throws DaoException {
         List<Group> groups = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM groupst;");
+            statement = this.connection.prepareStatement("SELECT * FROM groupst;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 groups.add(makeGroup(resultSet));
@@ -69,7 +75,6 @@ public class GroupDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -78,14 +83,12 @@ public class GroupDao {
         return groups;
     }
 
-    public static Group findGroupById(Integer id) throws DaoException {
+    public Group findGroupById(Integer id) throws DaoException {
         Group group = null;
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM groupst WHERE id=" + id + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM groupst WHERE id=" + id + ";");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 group = makeGroup(resultSet);
@@ -95,7 +98,6 @@ public class GroupDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -104,16 +106,14 @@ public class GroupDao {
         return group;
     }
 
-    public static boolean isExist(Integer id) throws DaoException {
+    public boolean isExist(Integer id) throws DaoException {
         return findGroupById(id) != null;
     }
 
-    public static boolean deleteGroupById(Integer id) throws DaoException {
-        Connection connection = null;
+    public boolean deleteGroupById(Integer id) throws DaoException {
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "DELETE FROM groupst WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
             sqlString = "DELETE FROM groupmembers WHERE groupid =" + id + ";";
@@ -123,7 +123,6 @@ public class GroupDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -132,14 +131,12 @@ public class GroupDao {
         return true;
     }
 
-    public static boolean isGroupHasMembers(Integer groupid) throws DaoException {
+    public boolean isGroupHasMembers(Integer groupid) throws DaoException {
         int count = 0;
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT COUNT(*) AS count FROM groupmembers WHERE groupid="
+            statement = this.connection.prepareStatement("SELECT COUNT(*) AS count FROM groupmembers WHERE groupid="
                                                                                         + groupid + ";");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
@@ -151,7 +148,6 @@ public class GroupDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -160,19 +156,16 @@ public class GroupDao {
         return count > 0;
     }
 
-    public static boolean deleteAllMembersFromGroup(Integer groupid) throws DaoException{
-        Connection connection = null;
+    public boolean deleteAllMembersFromGroup(Integer groupid) throws DaoException{
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "DELETE FROM groupmembers WHERE groupid=" + groupid + ";";
             statement.executeUpdate(sqlString);
         } catch(SQLException e) {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -181,15 +174,13 @@ public class GroupDao {
         return true;
     }
 
-    public static boolean updateGroupMembers(Integer groupid, List<User> members) throws DaoException{
+    public boolean updateGroupMembers(Integer groupid, List<User> members) throws DaoException{
         if(isGroupHasMembers(groupid)) {
             deleteAllMembersFromGroup(groupid);
         }
-        Connection connection = null;
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             for(User member : members) {
                 String sqlString = "INSERT INTO groupmembers(groupid, userid) VALUES";
                 sqlString += "('" + groupid + "', '" + member.getId() + "');";
@@ -199,7 +190,6 @@ public class GroupDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -208,12 +198,10 @@ public class GroupDao {
         return true;
     }
 
-    public static boolean deleteMemberFromGroup(Integer userid, Integer groupid) throws DaoException {
-        Connection connection = null;
+    public boolean deleteMemberFromGroup(Integer userid, Integer groupid) throws DaoException {
         Statement statement = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "DELETE FROM groupmembers WHERE userid=" + userid + " AND groupid=" +
                                                                                         groupid + ";";
             statement.executeUpdate(sqlString);
@@ -222,7 +210,6 @@ public class GroupDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -231,12 +218,10 @@ public class GroupDao {
         return true;
     }
 
-    public static boolean addMemberToGroup(Integer userid, Integer groupid) throws DaoException {
-        Connection connection = null;
+    public boolean addMemberToGroup(Integer userid, Integer groupid) throws DaoException {
         Statement statement = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "INSERT INTO groupmembers(groupid, userid) VALUES ";
             sqlString += "('" + groupid + "', '" + userid + "');";
             statement.executeUpdate(sqlString);
@@ -245,7 +230,6 @@ public class GroupDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -254,13 +238,11 @@ public class GroupDao {
         return true;
     }
 
-    public static boolean createGroup(Group entity) throws DaoException {
-        Connection connection = null;
+    public boolean createGroup(Group entity) throws DaoException {
         Statement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "INSERT INTO groupst(creatorid, userNum, confirmation, description, name) VALUES ";
             sqlString += entity + ";";
             statement.executeUpdate(sqlString);
@@ -274,7 +256,6 @@ public class GroupDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -284,13 +265,11 @@ public class GroupDao {
         return true;
     }
     
-    public static Group updateGroup(Group entity) throws DaoException {
+    public Group updateGroup(Group entity) throws DaoException {
         Group group;
-        Connection connection = null;
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             group = findGroupById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE groupst SET ");
             sqlStringBuilder.append("name='").append(entity.getName()).append("', ");
@@ -305,7 +284,6 @@ public class GroupDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();

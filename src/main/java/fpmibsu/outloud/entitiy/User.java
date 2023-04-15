@@ -84,13 +84,13 @@ public class User {
     }
 
     public String view() {
-        StringBuilder stringBuilder = new StringBuilder("('");
+        StringBuilder stringBuilder = new StringBuilder("User: (id:'");
         stringBuilder.append(id).append("', ");
-        stringBuilder.append("'").append(name).append("', ");
-        stringBuilder.append("'").append(login).append("', ");
-        stringBuilder.append("'").append(password).append("', ");
-        stringBuilder.append("'").append(role).append("', ");
-        stringBuilder.append(getIntConfirmation()).append(")");
+        stringBuilder.append("name:'").append(name).append("', ");
+        stringBuilder.append("login:'").append(login).append("', ");
+        stringBuilder.append("pass:'").append(password).append("', ");
+        stringBuilder.append("role:'").append(role).append("', confirmation:'");
+        stringBuilder.append(getIntConfirmation()).append("')");
         return new String(stringBuilder);
     }
 }

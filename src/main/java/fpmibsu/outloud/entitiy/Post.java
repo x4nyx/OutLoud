@@ -78,13 +78,13 @@ public class Post {
     }
 
     public String view() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("('").append(id).append("', ");
-        stringBuilder.append("'").append(group.getId()).append("', ");
-        stringBuilder.append("'").append(creator.getId()).append("', ");
-        stringBuilder.append("'").append(viewCount).append("', ");
-        stringBuilder.append("'").append(text).append("', ");
-        stringBuilder.append("'").append(title).append("')");
+        StringBuilder stringBuilder = new StringBuilder("Post: ");
+        stringBuilder.append("(id:'").append(id).append("', ");
+        stringBuilder.append("groupid:'").append(group.getId()).append("', ");
+        stringBuilder.append("creatorid:'").append(creator.getId()).append("', ");
+        stringBuilder.append("viewCount:'").append(viewCount).append("', ");
+        stringBuilder.append("text:'").append(text).append("', ");
+        stringBuilder.append("title:'").append(title).append("')");
         return new String(stringBuilder);
     }
 }

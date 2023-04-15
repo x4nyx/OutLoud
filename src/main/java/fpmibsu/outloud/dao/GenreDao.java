@@ -7,7 +7,12 @@ import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 
 
-public class GenreDao {
+public class GenreDao extends AbstractDao{
+    public GenreDao() {super();}
+    public GenreDao(Connection connection) {
+        super(connection);
+    }
+
     private static Genre makeGenre(ResultSet resultSet) throws DaoException {
         Genre genre;
         try {
@@ -20,14 +25,12 @@ public class GenreDao {
         return genre;
     }
 
-    public static List<Genre> findAllGenres() throws DaoException {
+    public List<Genre> findAllGenres() throws DaoException {
         List<Genre> genres = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = ConnectionCreator.createConnection();
-            statement = connection.prepareStatement("SELECT * FROM genres;");
+            statement = this.connection.prepareStatement("SELECT * FROM genres;");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 genres.add(makeGenre(resultSet));
@@ -37,7 +40,6 @@ public class GenreDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -46,15 +48,13 @@ public class GenreDao {
         return genres;
     }
 
-    public static Genre findGenreById(Integer id) throws DaoException {
+    public Genre findGenreById(Integer id) throws DaoException {
         Genre genre = null;
-        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
             String sqlString = "SELECT * FROM genres WHERE id=" + id + ";";
-            statement = connection.prepareStatement(sqlString);
+            statement = this.connection.prepareStatement(sqlString);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 genre = makeGenre(resultSet);
@@ -64,7 +64,6 @@ public class GenreDao {
         } finally {
             try {
                 ConnectionCreator.close(resultSet);
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -73,12 +72,10 @@ public class GenreDao {
         return genre;
     }
 
-    public static boolean deleteGenreById(Integer id) throws DaoException {
-        Connection connection = null;
+    public boolean deleteGenreById(Integer id) throws DaoException {
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "DELETE FROM genres WHERE id=" + id + ";";
             statement.executeUpdate(sqlString);
         } catch(SQLException e) {
@@ -86,7 +83,6 @@ public class GenreDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();
@@ -95,13 +91,11 @@ public class GenreDao {
         return true;
     }
 
-    public static boolean createGenre(Genre entity) throws DaoException {
-        Connection connection = null;
+    public boolean createGenre(Genre entity) throws DaoException {
         Statement statement = null;
         ResultSet resultSet = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             String sqlString = "INSERT INTO genres(name) VALUES";
             sqlString += entity.toString() + ";";            
             statement.executeUpdate(sqlString);
@@ -114,7 +108,6 @@ public class GenreDao {
             return false;
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
                 ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
@@ -124,13 +117,11 @@ public class GenreDao {
         return true;
     }
     
-    public static Genre updateGenre(Genre entity) throws DaoException {
+    public Genre updateGenre(Genre entity) throws DaoException {
         Genre genre;
-        Connection connection = null;
         Statement statement = null;
         try{
-            connection = ConnectionCreator.createConnection();
-            statement = connection.createStatement();
+            statement = this.connection.createStatement();
             genre = findGenreById(entity.getId());
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE genres SET ");
             sqlStringBuilder.append("name='").append(entity.getName()).append("' ");
@@ -141,7 +132,6 @@ public class GenreDao {
             throw new DaoException(e);
         } finally {
             try {
-                ConnectionCreator.close(connection);
                 ConnectionCreator.close(statement);
             } catch(SQLException e) {
                 e.printStackTrace();

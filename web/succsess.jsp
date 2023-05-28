@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
+<embed src="music/Михаил Круг - Жиган Лимон.mp3" autostart="true" hidden="true" loop="true" width="300" height="65" align="bottom"> </embed>
 <header  class="header-class">
     <a href="#header"></a>
     <div style="background-color:ghostwhite">
@@ -27,8 +28,8 @@
     </div>
 </header>
 
-<section class = "mainpage">
-    <img src="img/ryan.jpg" width="100%" height="100%">
+<section class = "mainpage" >
+
 </section>
 
 <footer style="background-color: rgba(0, 0, 0, 0.250); padding-top: 30px;">

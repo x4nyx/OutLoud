@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 
+import com.mysql.cj.log.Log;
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 import fpmibsu.outloud.enumfiles.Type;
@@ -96,6 +97,29 @@ public class UserDao extends AbstractDao{
         return user;
     }
 
+    public User findUserByLogin(String login) throws DaoException {
+        User user = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try{
+            statement = this.connection.prepareStatement("SELECT * FROM users WHERE login=" + login + ";");
+            resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                user = makeUser(resultSet);
+            }
+        } catch(SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
+
     public boolean deleteUserById(Integer id) throws DaoException {
         if(!isExist(id)) {
             return false;
@@ -164,6 +188,30 @@ public class UserDao extends AbstractDao{
         } finally {
             try {
                 ConnectionCreator.close(statement);
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
+
+    public User validate(String login, String password) throws DaoException {
+        User user = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try{
+            statement = this.connection.prepareStatement("SELECT * FROM users WHERE login=" + login +
+                    " AND password=" + password + ";");
+            resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                user = makeUser(resultSet);
+            }
+        } catch(SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                ConnectionCreator.close(statement);
+                ConnectionCreator.close(resultSet);
             } catch(SQLException e) {
                 e.printStackTrace();
             }

@@ -33,4 +33,8 @@ public abstract class AbstractDao {
         }
         return true;
     }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 }

@@ -1,0 +1,38 @@
+.navbar-brand{
+    text-align: right;
+}
+
+.footer-text{
+    font-size: 12px;
+    line-height: 3;
+    text-align: left;
+}
+.carousel-indicators button{
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+}
+
+.usual-text{
+    font-size: 12px;
+    text-align: left;
+}
+.custom-button{
+    border-radius: 50px;
+    background-color: rgb(249, 148, 6);
+    color: aliceblue;
+    border: 0;
+    font-size: 12px;
+    height: 27px;
+}
+.hyperlink{
+    text-decoration: none;
+    font-weight: bolder;
+    color: black;
+}
+.mainpage{
+    width:100vw;
+    height: 40vw;
+
+
+}

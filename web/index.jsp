@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+  <title>Login</title>
 </head>
 <body>
 <style>
@@ -62,12 +62,12 @@
             padding:50px 20px;
         }
     }                                                                                                                                                                                                                                                                                                                        .no-pointerevents .form-3 p:nth-child(1):before {
-                                                                                                                                                                                                                                                                                                                                 display: none;
-                                                                                                                                                                                                                                                                                                                             }
+                                                                                                                                                                                                                                                                                                                                     display: none;
+                                                                                                                                                                                                                                                                                                                                 }
 </style>
 <div class="registration-cssave">
     <form action= LoginServlet method = post>
-        <h3 class="text-center">Вход</h3>
+             <h3 class="text-center">Вход</h3>
         <div class="form-group">
             <input class="form-control item" type="text" name="username" maxlength="15" minlength="4" pattern="^[a-zA-Z0-9_.-]*$" id="username" placeholder="Логин" required>
         </div>

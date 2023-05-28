@@ -7,15 +7,17 @@ import fpmibsu.outloud.entitiy.Group;
 import java.util.List;
 
 public class GroupService {
-    public List<Group> getAllGroups() throws DaoException {
-        GroupDao groupDao = new GroupDao();
+    GroupDao groupDao = new GroupDao();
+
+    public GroupService() {
         groupDao.createConnection();
+    }
+
+    public List<Group> getAllGroups() throws DaoException {
         return groupDao.findAllGroups();
     }
 
     public Group getGroupById(Integer groupId) throws DaoException {
-        GroupDao groupDao = new GroupDao();
-        groupDao.createConnection();
         return groupDao.findGroupById(groupId);
     }
 }

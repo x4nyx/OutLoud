@@ -5,9 +5,13 @@ import fpmibsu.outloud.dao.PostDao;
 import fpmibsu.outloud.entitiy.Post;
 
 public class PostService {
-    public Post getPostById(Integer postId) throws DaoException {
-        PostDao postDao = new PostDao();
+    PostDao postDao = new PostDao();
+
+    public PostService() {
         postDao.createConnection();
+    }
+
+    public Post getPostById(Integer postId) throws DaoException {
         return postDao.findPostById(postId);
     }
 
@@ -23,8 +27,6 @@ public class PostService {
         }
         GroupService groupService = new GroupService();
         newPost.setGroup(groupService.getGroupById(groupId));
-        PostDao postDao = new PostDao();
-        postDao.createConnection();
         return postDao.createPost(newPost);
     }
 }

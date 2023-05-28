@@ -7,15 +7,17 @@ import fpmibsu.outloud.entitiy.Track;
 import java.util.List;
 
 public class TrackService {
-    public List<Track> getAllTracks() throws DaoException {
-        TrackDao trackDao = new TrackDao();
+    TrackDao trackDao = new TrackDao();
+
+    public TrackService() {
         trackDao.createConnection();
+    }
+
+    public List<Track> getAllTracks() throws DaoException {
         return trackDao.findAllTracks();
     }
 
     public Track getTrackById(Integer trackId) throws DaoException {
-        TrackDao trackDao = new TrackDao();
-        trackDao.createConnection();
         return trackDao.findTrackById(trackId);
     }
 }

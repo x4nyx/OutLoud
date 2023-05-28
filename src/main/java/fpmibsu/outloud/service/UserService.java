@@ -6,22 +6,22 @@ import fpmibsu.outloud.entitiy.User;
 import fpmibsu.outloud.enumfiles.Type;
 
 public class UserService {
-    public boolean isExist(String login) throws DaoException {
-        UserDao userDao = new UserDao();
+    UserDao userDao = new UserDao();
+
+    public UserService() {
         userDao.createConnection();
+    }
+
+    public boolean isExist(String login) throws DaoException {
         return userDao.findUserByLogin(login) != null;
     }
 
     public boolean validate(String login, String password) throws DaoException {
-        UserDao userDao = new UserDao();
-        userDao.createConnection();
         User user = userDao.validate(login, password);
         return user != null;
     }
 
     public boolean createUser(String login, String password) throws DaoException {
-        UserDao userDao = new UserDao();
-        userDao.createConnection();
         if(userDao.findUserByLogin(login) != null) {
             return false;
         }
@@ -34,14 +34,10 @@ public class UserService {
     }
 
     public User getUser(String login) throws DaoException {
-        UserDao userDao = new UserDao();
-        userDao.createConnection();
         return userDao.findUserByLogin(login);
     }
 
     public User getUserById(Integer id) throws DaoException {
-        UserDao userDao = new UserDao();
-        userDao.createConnection();
         return userDao.findUserById(id);
     }
 }

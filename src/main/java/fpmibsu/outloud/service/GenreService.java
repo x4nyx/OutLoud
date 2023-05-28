@@ -7,15 +7,17 @@ import fpmibsu.outloud.entitiy.Genre;
 import java.util.List;
 
 public class GenreService {
-    public List<Genre> getAllGenres() throws DaoException {
-        GenreDao genreDao = new GenreDao();
+    GenreDao genreDao = new GenreDao();
+
+    public GenreService() {
         genreDao.createConnection();
+    }
+
+    public List<Genre> getAllGenres() throws DaoException {
         return genreDao.findAllGenres();
     }
 
     public Genre getGenreById(Integer genreId) throws DaoException {
-        GenreDao genreDao = new GenreDao();
-        genreDao.createConnection();
         return genreDao.findGenreById(genreId);
     }
 }

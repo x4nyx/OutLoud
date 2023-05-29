@@ -16,9 +16,9 @@
         <nav class="navbar bg-body-tertiary"  style="background-size: 100%100vw; margin-left: 20%; margin-right: 20%; background-color:black;">
             <div class="container-fluid">
                 <p><img src="img/logo.png" alt="logo" width="150px"></p>
-                <form class="d-flex" role="search">
-                    <input type="text" class="form-control" placeholder="Поиск треков" style="font-size:12px; border-radius: 0;" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                    <input type="image" src="img/lupa.png" alt="Кнопка «input»" width="30px">
+                <form class="d-flex" role="search" action= SearchServlet method = get>
+                    <input type="text" name="searchtrack" class="form-control" placeholder="Поиск треков" style="font-size:12px; border-radius: 0;" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                    <input type="image" name="submitbutton" src="img/lupa.png" alt="Кнопка «input»" width="30px">
                 </form>
                 <p><input type="image" src="img/heart.png" width="20px" height="20px" style="margin-top: 15px;"></p>
                 <p><input type="image" src="img/friends.png" width="20px" height="20px" style="margin-top: 15px;"></p>

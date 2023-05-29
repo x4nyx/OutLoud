@@ -20,4 +20,8 @@ public class TrackService {
     public Track getTrackById(Integer trackId) throws DaoException {
         return trackDao.findTrackById(trackId);
     }
+
+    public List<Track> getTracks(String name) throws DaoException {
+        return trackDao.findTracksByName(name);
+    }
 }

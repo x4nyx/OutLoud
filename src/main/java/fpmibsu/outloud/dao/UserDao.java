@@ -1,15 +1,17 @@
 package fpmibsu.outloud.dao;
-import java.util.ArrayList;
-import java.util.List;
-import java.sql.*;
 
-import com.mysql.cj.log.Log;
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
 import fpmibsu.outloud.enumfiles.Type;
+//import org.apache.log4j.Logger;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserDao extends AbstractDao{
+    //private static Logger logger = Logger.getLogger(User.class);
     public UserDao() {super();}
     public UserDao(Connection connection) {
         super(connection);
@@ -20,8 +22,8 @@ public class UserDao extends AbstractDao{
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            statement = this.connection.prepareStatement("SELECT COUNT(*) AS count FROM users WHERE id="
-                                                                        + userid + ";");
+            statement = this.connection.prepareStatement("SELECT COUNT(*) AS count FROM users WHERE id='"
+                    + userid + "';");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 count = resultSet.getInt("count");
@@ -79,7 +81,7 @@ public class UserDao extends AbstractDao{
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            statement = this.connection.prepareStatement("SELECT * FROM users WHERE id=" + id + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM users WHERE id='" + id + "';");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 user = makeUser(resultSet);
@@ -102,7 +104,7 @@ public class UserDao extends AbstractDao{
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            statement = this.connection.prepareStatement("SELECT * FROM users WHERE login=" + login + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM users WHERE login='" + login + "';");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 user = makeUser(resultSet);
@@ -127,7 +129,7 @@ public class UserDao extends AbstractDao{
         Statement statement = null;
         try{
             statement = this.connection.createStatement();
-            String sqlString = "DELETE FROM users WHERE id=" + id + ";";
+            String sqlString = "DELETE FROM users WHERE id='" + id + "';";
             statement.executeUpdate(sqlString);
         } catch(SQLException e) {
             e.printStackTrace();
@@ -154,6 +156,9 @@ public class UserDao extends AbstractDao{
             if(resultSet.next()) {
                 entity.setId(resultSet.getInt("LAST_INSERT_ID()"));
             }
+          //  else {
+          //      logger.error("There is no autoincremented index after trying to add record into table `users`");
+           // }
         } catch(SQLException e) {
             e.printStackTrace();
             return false;
@@ -200,8 +205,8 @@ public class UserDao extends AbstractDao{
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            statement = this.connection.prepareStatement("SELECT * FROM users WHERE login=" + login +
-                    " AND password=" + password + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM users WHERE login='" + login +
+                    "' AND password='" + password + "';");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 user = makeUser(resultSet);

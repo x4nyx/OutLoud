@@ -2,6 +2,7 @@ package fpmibsu.outloud.dao;
 
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.Track;
+//import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 
 public class TrackDao extends AbstractDao{
+    //private static Logger logger = Logger.getLogger(TrackDao.class);
     public TrackDao() {super();}
     public TrackDao(Connection connection) {
         super(connection);
@@ -60,7 +62,7 @@ public class TrackDao extends AbstractDao{
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            statement = this.connection.prepareStatement("SELECT * FROM tracks WHERE id=" + id + ";");
+            statement = this.connection.prepareStatement("SELECT * FROM tracks WHERE id='" + id + "';");
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 track = makeTrack(resultSet);
@@ -85,7 +87,7 @@ public class TrackDao extends AbstractDao{
         ResultSet resultSet = null;
         try {
             String sqlString = "SELECT * FROM tracks WHERE LOWER(name) LIKE '%"
-                                                            + nameSubstr + "%';";
+                    + nameSubstr + "%';";
             statement = this.connection.prepareStatement(sqlString);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
@@ -120,6 +122,9 @@ public class TrackDao extends AbstractDao{
             if(resultSet.next()) {
                 track.setId(resultSet.getInt("LAST_INSERT_ID()"));
             }
+            //else {
+            //    logger.error("There is no autoincremented index after trying to add record into table `tracks`");
+           // }
         } catch(SQLException e) {
             e.printStackTrace();
             return false;
@@ -169,7 +174,7 @@ public class TrackDao extends AbstractDao{
         Statement statement = null;
         try{
             statement = this.connection.createStatement();
-            String sqlString = "DELETE FROM tracks WHERE id=" + id + ";";
+            String sqlString = "DELETE FROM tracks WHERE id='" + id + "';";
             statement.executeUpdate(sqlString);
         } catch(SQLException e) {
             e.printStackTrace();

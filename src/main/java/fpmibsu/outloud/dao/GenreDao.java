@@ -1,13 +1,16 @@
 package fpmibsu.outloud.dao;
-import java.util.ArrayList;
-import java.util.List;
-import java.sql.*;
 
 import fpmibsu.outloud.connectioncreator.ConnectionCreator;
 import fpmibsu.outloud.entitiy.*;
+//import org.apache.log4j.Logger;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class GenreDao extends AbstractDao{
+    //private static Logger logger = Logger.getLogger(GenreDao.class);
     public GenreDao() {super();}
     public GenreDao(Connection connection) {
         super(connection);
@@ -53,7 +56,7 @@ public class GenreDao extends AbstractDao{
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try{
-            String sqlString = "SELECT * FROM genres WHERE id=" + id + ";";
+            String sqlString = "SELECT * FROM genres WHERE id='" + id + "';";
             statement = this.connection.prepareStatement(sqlString);
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
@@ -76,7 +79,7 @@ public class GenreDao extends AbstractDao{
         Statement statement = null;
         try{
             statement = this.connection.createStatement();
-            String sqlString = "DELETE FROM genres WHERE id=" + id + ";";
+            String sqlString = "DELETE FROM genres WHERE id='" + id + "';";
             statement.executeUpdate(sqlString);
         } catch(SQLException e) {
             e.printStackTrace();
@@ -97,12 +100,15 @@ public class GenreDao extends AbstractDao{
         try{
             statement = this.connection.createStatement();
             String sqlString = "INSERT INTO genres(name) VALUES";
-            sqlString += entity.toString() + ";";            
+            sqlString += entity.toString() + ";";
             statement.executeUpdate(sqlString);
             resultSet = statement.executeQuery("SELECT LAST_INSERT_ID();");
             if(resultSet.next()) {
                 entity.setId(resultSet.getInt("LAST_INSERT_ID()"));
             }
+         //   else{
+         //       logger.error("There is no autoincremented index after trying to add record into table `genres`");
+         //   }
         } catch(SQLException e) {
             e.printStackTrace();
             return false;
@@ -116,7 +122,7 @@ public class GenreDao extends AbstractDao{
         }
         return true;
     }
-    
+
     public Genre updateGenre(Genre entity) throws DaoException {
         Genre genre;
         Statement statement = null;
@@ -126,7 +132,7 @@ public class GenreDao extends AbstractDao{
             StringBuilder sqlStringBuilder = new StringBuilder("UPDATE genres SET ");
             sqlStringBuilder.append("name='").append(entity.getName()).append("' ");
             sqlStringBuilder.append("WHERE id=").append(entity.getId()).append(";");
-            String sqlString = new String(sqlStringBuilder);           
+            String sqlString = new String(sqlStringBuilder);
             statement.executeUpdate(sqlString);
         } catch(SQLException e) {
             throw new DaoException(e);

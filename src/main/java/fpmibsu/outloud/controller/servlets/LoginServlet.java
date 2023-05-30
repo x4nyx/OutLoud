@@ -17,10 +17,10 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try{
             String n = req.getParameter("username");
-            String n2 = req.getParameter("Пароль");
+            String password = req.getParameter("Пароль");
             UserService userService = new UserService();
             User user;
-            user = userService.getUser(n);
+            user = user = userService.validate(n, password);
             if (user != null){
                 HttpSession session = req.getSession();
                 session.setAttribute("authorizedUser", user);

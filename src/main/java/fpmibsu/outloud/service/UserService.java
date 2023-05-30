@@ -16,9 +16,8 @@ public class UserService {
         return userDao.findUserByLogin(login) != null;
     }
 
-    public boolean validate(String login, String password) throws DaoException {
-        User user = userDao.validate(login, password);
-        return user != null;
+    public User validate(String login, String password) throws DaoException {
+        return userDao.validate(login, password);
     }
 
     public boolean createUser(String login, String password) throws DaoException {

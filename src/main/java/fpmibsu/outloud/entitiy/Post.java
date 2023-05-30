@@ -1,6 +1,6 @@
 package fpmibsu.outloud.entitiy;
 
-public class Post {
+public class Post implements Entity{
     private Integer id;
     private Group group;
     private User creator;

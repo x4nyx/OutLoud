@@ -3,7 +3,7 @@ package fpmibsu.outloud.entitiy;
 import java.util.List;
 import java.sql.Date;
 
-public class Album {
+public class Album implements Entity {
     private Integer id;
     private String name;
     private User creator;

@@ -1,27 +1,15 @@
 package fpmibsu.outloud.service;
 
-import fpmibsu.outloud.dao.DaoException;
-import fpmibsu.outloud.dao.TrackDao;
+import fpmibsu.outloud.exception.PersistentException;
 import fpmibsu.outloud.entitiy.Track;
 
 import java.util.List;
 
-public class TrackService {
-    TrackDao trackDao = new TrackDao();
+public interface TrackService extends Service {
 
-    public TrackService() {
-        trackDao.createConnection();
-    }
+    List<Track> getAllTracks() throws PersistentException;
 
-    public List<Track> getAllTracks() throws DaoException {
-        return trackDao.findAllTracks();
-    }
+    Track getTrackById(Integer trackId) throws PersistentException;
 
-    public Track getTrackById(Integer trackId) throws DaoException {
-        return trackDao.findTrackById(trackId);
-    }
-
-    public List<Track> getTracks(String name) throws DaoException {
-        return trackDao.findTracksByName(name);
-    }
+    List<Track> getTracks(String name) throws PersistentException;
 }

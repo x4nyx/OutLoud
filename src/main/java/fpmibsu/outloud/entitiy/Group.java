@@ -2,7 +2,7 @@ package fpmibsu.outloud.entitiy;
 
 import java.util.List;
 
-public class Group {
+public class Group implements Entity {
     private Integer id;
     private User creator;
     private List<User> members;

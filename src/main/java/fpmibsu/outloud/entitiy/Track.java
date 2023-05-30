@@ -2,7 +2,7 @@ package fpmibsu.outloud.entitiy;
 
 import java.sql.Date;
 
-public class Track {
+public class Track implements Entity {
     private Integer id;
     private User creator;
     private Date date;

@@ -1,6 +1,6 @@
 package fpmibsu.outloud.entitiy;
 
-public class Genre {
+public class Genre implements Entity {
     private Integer id;
     private String name;
 

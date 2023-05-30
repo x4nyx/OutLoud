@@ -1,7 +1,7 @@
 package fpmibsu.outloud.entitiy;
 import fpmibsu.outloud.enumfiles.Type;
 
-public class User {
+public class User implements Entity {
     private Integer id;
     private String name; 
     private String login;

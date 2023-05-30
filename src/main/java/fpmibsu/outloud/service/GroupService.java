@@ -1,23 +1,12 @@
 package fpmibsu.outloud.service;
 
-import fpmibsu.outloud.dao.DaoException;
-import fpmibsu.outloud.dao.GroupDao;
 import fpmibsu.outloud.entitiy.Group;
-
+import fpmibsu.outloud.exception.PersistentException;
 import java.util.List;
 
-public class GroupService {
-    GroupDao groupDao = new GroupDao();
+public interface GroupService extends Service{
 
-    public GroupService() {
-        groupDao.createConnection();
-    }
+    List<Group> getAllGroups() throws PersistentException;
 
-    public List<Group> getAllGroups() throws DaoException {
-        return groupDao.findAllGroups();
-    }
-
-    public Group getGroupById(Integer groupId) throws DaoException {
-        return groupDao.findGroupById(groupId);
-    }
+    Group getGroupById(Integer groupId) throws PersistentException;
 }

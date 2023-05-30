@@ -1,23 +1,13 @@
 package fpmibsu.outloud.service;
 
-import fpmibsu.outloud.dao.DaoException;
-import fpmibsu.outloud.dao.GenreDao;
+import fpmibsu.outloud.exception.PersistentException;
 import fpmibsu.outloud.entitiy.Genre;
 
 import java.util.List;
 
-public class GenreService {
-    GenreDao genreDao = new GenreDao();
+public interface GenreService extends Service {
 
-    public GenreService() {
-        genreDao.createConnection();
-    }
+    List<Genre> getAllGenres() throws PersistentException;
 
-    public List<Genre> getAllGenres() throws DaoException {
-        return genreDao.findAllGenres();
-    }
-
-    public Genre getGenreById(Integer genreId) throws DaoException {
-        return genreDao.findGenreById(genreId);
-    }
+    Genre getGenreById(Integer genreId) throws PersistentException;
 }

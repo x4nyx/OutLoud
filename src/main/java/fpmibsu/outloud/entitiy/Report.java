@@ -1,7 +1,7 @@
 package fpmibsu.outloud.entitiy;
 import fpmibsu.outloud.enumfiles.Status;
 
-public class Report {
+public class Report implements Entity{
     private Integer id;
     private User creator;
     private User helper;

@@ -1,34 +1,18 @@
 package fpmibsu.outloud.service;
 
-import fpmibsu.outloud.dao.DaoException;
-import fpmibsu.outloud.dao.ReportDao;
+import fpmibsu.outloud.exception.PersistentException;
 import fpmibsu.outloud.entitiy.Report;
 import fpmibsu.outloud.enumfiles.Status;
 
 import java.util.List;
 
-public class ReportService {
-    ReportDao reportDao = new ReportDao();
+public interface ReportService extends Service{
 
-    public ReportService() {
-        reportDao.createConnection();
-    }
+    List<Report> getAllReports() throws PersistentException;
 
-    public List<Report> getAllReports() throws DaoException {
-        return reportDao.findAllReports();
-    }
+    List<Report> getAllReportsByStatus(Status status) throws PersistentException;
 
-    public List<Report> getAllReportsByStatus(Status status) throws DaoException {
-        return reportDao.findAllByStatus(status);
-    }
+    Report getReportById(Integer reportId) throws PersistentException;
 
-    public Report getReportById(Integer reportId) throws DaoException {
-        return reportDao.findReportById(reportId);
-    }
-
-    public boolean updateReportStatus(Report report, Status status) throws DaoException {
-        report.setStatus(status);
-        Report updatedReport = reportDao.updateReport(report);
-        return updatedReport.getStatus() == status;
-    }
+    boolean updateReportStatus(Report report, Status status) throws PersistentException;
 }

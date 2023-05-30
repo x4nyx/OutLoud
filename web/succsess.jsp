@@ -1,4 +1,5 @@
-<html lang="ru">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,23 +10,22 @@
     <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
-<embed src="music/Михаил Круг - Жиган Лимон.mp3" autostart="true" hidden="true" loop="true" width="300" height="65" align="bottom"> </embed>
+<embed src="music/Михаил Круг - Жиган Лимон.mp3" autostart="false" hidden="true" loop="true" width="300" height="65" align="bottom"> </embed>
 <header  class="header-class">
     <a href="#header"></a>
     <div style="background-color:ghostwhite">
         <nav class="navbar bg-body-tertiary"  style="background-size: 100%100vw; margin-left: 20%; margin-right: 20%; background-color:black;">
             <div class="container-fluid">
                 <p><img src="img/logo.png" alt="logo" width="150px"></p>
-                <form class="d-flex" role="search" action= SearchServlet method = get>
-                    <input type="text" name="searchtrack" class="form-control" placeholder="Поиск треков" style="font-size:12px; border-radius: 0;" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                    <input type="image" name="submitbutton" src="img/lupa.png" alt="Кнопка «input»" width="30px">
+                <form class="d-flex" role="search">
+                    <input type="text" class="form-control" placeholder="Поиск треков" style="font-size:12px; border-radius: 0;" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                    <input type="image" src="img/lupa.png" alt="Кнопка «input»" width="30px">
                 </form>
-                <p><input type="image" src="img/heart.png" width="20px" height="20px" style="margin-top: 15px;"></p>
+                <p><input type="image" src="img/heart.png" width="20px" height="20px" style="margin-top: 15px;" onclick="showPlaylist()"></p>
                 <p><input type="image" src="img/friends.png" width="20px" height="20px" style="margin-top: 15px;"></p>
                 <p><input type="image" src="img/user.png" width="20px" height="20px" style="margin-top: 15px;"></p>
-            </div>
+            </div class="d-flex justify-content-end">
         </nav>
-    </div>
 </header>
 
 <section class = "mainpage" >
@@ -34,7 +34,7 @@
             <ul>
                 <li><span class="simp-source" data-src="music/Coconuts - Silver Lights.mp3">Silver Lights</span><span class="simp-desc">Coconuts</span></li>
                 <li><span class="simp-source" data-src="music\Eirik Suhrke - A New Morning.mp3">A New Morning</span><span class="simp-desc">Eirik Suhrke</span></li>
-                <li><span class="simp-source" data-src="C:\Users\Professional\Desktop\FRONT\music\El Huervo - Crush.mp3">Crush</span><span class="simp-desc">El Huervo</span></li>
+                <li><span class="simp-source" data-src="music\El Huervo - Crush.mp3">Crush</span><span class="simp-desc">El Huervo</span></li>
                 <li class="simp-active"><span class="simp-source" data-src="music\El Huervo - Daisuke.mp3">Daisuke</span><span class="simp-desc">El Huervo</span></li>
                 <li><span class="simp-source" data-src="music\El Huervo - Turf.mp3">Turf</span><span class="simp-desc">El Huervo</span></li>
                 <li><span class="simp-source" data-src="music\Jasper Byrne - Hotline.mp3">Hotline</span><span class="simp-desc">Jasper Byrne</span></li>
@@ -47,6 +47,7 @@
 </section>
 
 <footer style="background-color: rgba(0, 0, 0, 0.250); padding-top: 30px;">
+    <script src="playlist.js"></script>
     <div class="container text-center">
         <div class="row justify-content-md-center">
             <div class="col col-lg-3" style="text-align: left;">

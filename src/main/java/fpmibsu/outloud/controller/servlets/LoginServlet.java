@@ -8,11 +8,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 public class LoginServlet extends HttpServlet {
-    //private static Logger logger = Logger.getLogger(LoginServlet.class);
+    private static Logger logger = LogManager.getLogger(LoginServlet.class);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try{
@@ -24,11 +25,11 @@ public class LoginServlet extends HttpServlet {
             if (user != null){
                 HttpSession session = req.getSession();
                 session.setAttribute("authorizedUser", user);
-                //logger.info(String.format("user \"%s\" is logged in from %s (%s:%s)", n, req.getRemoteAddr(), req.getRemoteHost(), req.getRemotePort()));
+                logger.info("User is successfully logged");
                 resp.sendRedirect("succsess.jsp");
             }
             else {
-                //logger.info(String.format("user \"%s\" unsuccessfully tried to log in from %s (%s:%s)", n, req.getRemoteAddr(), req.getRemoteHost(), req.getRemotePort()));
+                logger.info("Fail while logging");
                 resp.sendRedirect("index.jsp");
             }
 

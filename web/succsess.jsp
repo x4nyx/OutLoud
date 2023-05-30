@@ -29,7 +29,21 @@
 </header>
 
 <section class = "mainpage" >
-
+    <div style="visibility: hidden;" class="simple-audio-player" id="simp" data-config='{"shide_top":false,"shide_btm":false,"auto_load":false}'>
+        <div class="simp-playlist">
+            <ul>
+                <li><span class="simp-source" data-src="music/Coconuts - Silver Lights.mp3">Silver Lights</span><span class="simp-desc">Coconuts</span></li>
+                <li><span class="simp-source" data-src="music\Eirik Suhrke - A New Morning.mp3">A New Morning</span><span class="simp-desc">Eirik Suhrke</span></li>
+                <li><span class="simp-source" data-src="C:\Users\Professional\Desktop\FRONT\music\El Huervo - Crush.mp3">Crush</span><span class="simp-desc">El Huervo</span></li>
+                <li class="simp-active"><span class="simp-source" data-src="music\El Huervo - Daisuke.mp3">Daisuke</span><span class="simp-desc">El Huervo</span></li>
+                <li><span class="simp-source" data-src="music\El Huervo - Turf.mp3">Turf</span><span class="simp-desc">El Huervo</span></li>
+                <li><span class="simp-source" data-src="music\Jasper Byrne - Hotline.mp3">Hotline</span><span class="simp-desc">Jasper Byrne</span></li>
+                <li><span class="simp-source" data-src="music\Jasper Byrne - Miami.mp3">Miami</span><span class="simp-desc">Jasper Byrne</span></li>
+                <li><span class="simp-source" data-src="music\M_O_O_N - Crystals.mp3">Crystals</span><span class="simp-desc">M_O_O_N </span></li>
+                <li><span class="simp-source" data-src="music\M_O_O_N - Hydrogen.mp3">Hydrogen</span><span class="simp-desc">M_O_O_N</span></li>
+            </ul>
+        </div>
+    </div>
 </section>
 
 <footer style="background-color: rgba(0, 0, 0, 0.250); padding-top: 30px;">

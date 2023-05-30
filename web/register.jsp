@@ -1,5 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Login</title>
@@ -25,7 +25,7 @@
         padding:50px 0;
     }
 
-    .registration-cssave form{
+    .registration-cssave form {
         max-width:800px;
         padding:50px 70px;
         border-radius:10px;
@@ -36,13 +36,14 @@
     .registration-cssave form h3 {
         font-weight:bold;
         margin-bottom:30px;
-        margin-left: 80px;
+        margin-left: 60px;
     }
 
     .registration-cssave .item {
         border-radius:10px;
         margin-bottom:25px;
         padding:10px 20px;
+        margin-left: 15px;
     }
 
     .registration-cssave .create-account {
@@ -54,18 +55,6 @@
         border:none;
         color:white;
         margin-top:20px;
-        margin-left: 15px;
-    }
-    .registration-cssave .reg-account {
-        border-radius:30px;
-        padding:10px 20px;
-        font-size:18px;
-        font-weight:bold;
-        background-color:#3f93ff;
-        border:none;
-        color:white;
-        margin-top:20px;
-        margin-left: 20px;
     }
 
     @media (max-width: 576px) {
@@ -77,24 +66,19 @@
                                                                                                                                                                                                                                                                                                                              }
 </style>
 <div class="registration-cssave">
-    <form>
-        <h3 class="text-center">Вход</h3>
+    <form action= RegistrServlet method = post>
+        <h3 class="text-center">Регистрация</h3>
         <div class="form-group">
-            <input class="form-control item" type="text" name="username"  id="username" >
+            <input class="form-control item" type="text" name="login" maxlength="15" minlength="4" pattern="^[a-zA-Z0-9_.-]*$" id="username" placeholder="Логин" required>
         </div>
         <div class="form-group">
-            <input class="form-control item" type="password" name="Пароль"  id="password">
+            <input class="form-control item" type="password" name="password" minlength="6" id="password" placeholder="Пароль" required>
         </div>
-        <div class = "form-group">
-            <button class="btn btn-primary btn-block create-account" formaction= LoginServlet type="submit" value = "1">Вход в аккаунт</button>
-        </div>
-        <div class = "form-group">
-            <button class="btn btn-primary btn-block reg-account" formaction = "register.jsp"  type="submit" value = "2">Регистрация</button>
+        <div class="form-group">
+            <button class="btn btn-primary btn-block create-account" type="submit">Зарегистрироваться</button>
         </div>
     </form>
-
 </div>
-
 
 </body>
 </html>

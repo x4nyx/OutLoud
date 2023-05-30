@@ -17,29 +17,21 @@ public class SearchServlet extends HttpServlet {
     //private static Logger logger = Logger.getLogger(LoginServlet.class);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String n = req.getParameter("name");
+        try {
+            String n = req.getParameter("name");
             TrackService trackService = new TrackService();
             List<Track> tracks;
-            try {
-                tracks = trackService.getTracks(n);
-            } catch (DaoException e) {
-                throw new RuntimeException(e);
-            }
-            if (!tracks.isEmpty()){
+            tracks = trackService.getTracks(n);
+            if (!tracks.isEmpty()) {
                 //logger.info("tracks are found");
                 resp.sendRedirect("tracks.jsp");
+            } else {
+                //logger.info("tracks aren't found");
+                resp.sendRedirect("succsess.jsp");
             }
-
-   /*    if (Objects.equals(n, "qwerty") && Objects.equals(n2, "qwerty")){
-            logger.info(String.format("user \"%s\" is logged in from %s (%s:%s)", n, req.getRemoteAddr(), req.getRemoteHost(), req.getRemotePort()));
-            RequestDispatcher rd = req.getRequestDispatcher("index.jsp");
-            rd.include(req, resp);
-        } */
-        else {
-            //logger.info("tracks aren't found");
-            RequestDispatcher rd = req.getRequestDispatcher("succsess.jsp");
-            rd.include(req, resp);
         }
-
+        catch (DaoException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -19,6 +19,14 @@
         <servlet-name>SearchServlet</servlet-name>
         <url-pattern>/SearchServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>RegistrServlet</servlet-name>
+        <servlet-class >fpmibsu.outloud.controller.servlets.RegistrServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegistrServlet</servlet-name>
+        <url-pattern>/RegistrServlet</url-pattern>
+    </servlet-mapping>
     <jsp-config>
         <jsp-property-group>
             <url-pattern>*.jsp</url-pattern>

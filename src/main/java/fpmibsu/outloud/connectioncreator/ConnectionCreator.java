@@ -18,6 +18,17 @@ public class ConnectionCreator{
         return connection;
     }
 
+    public static Connection createConnection(String url, String user, String password) throws SQLException {
+        Connection connection;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(url, user, password);
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new SQLException(e);
+        }
+        return connection;
+    }
+
     public static boolean close(AbstractDao object){
         if(object != null) {
             return object.closeConnection();

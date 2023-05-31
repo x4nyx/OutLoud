@@ -4,29 +4,23 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
     <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class >fpmibsu.outloud.controller.servlets.LoginServlet</servlet-class>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class >fpmibsu.outloud.controller.servlets.MainServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/LoginServlet</url-pattern>
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/MainServlet</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>SearchServlet</servlet-name>
-        <servlet-class >fpmibsu.outloud.controller.servlets.SearchServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SearchServlet</servlet-name>
-        <url-pattern>/SearchServlet</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>RegistrServlet</servlet-name>
-        <servlet-class >fpmibsu.outloud.controller.servlets.RegistrServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>RegistrServlet</servlet-name>
-        <url-pattern>/RegistrServlet</url-pattern>
-    </servlet-mapping>
+    <filter>
+    <filter-name>MainFilter</filter-name>
+    <filter-class>fpmibsu.outloud.controller.servlets.MainFilter</filter-class>
+
+</filter>
+    <filter-mapping>
+    <filter-name>MainFilter</filter-name>
+    <url-pattern>*.jsp</url-pattern>
+        <url-pattern>/MainServlet</url-pattern>
+</filter-mapping>
     <jsp-config>
         <jsp-property-group>
             <url-pattern>*.jsp</url-pattern>

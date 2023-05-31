@@ -86,7 +86,7 @@
             <input class="form-control item" type="password" name="Пароль"  id="password">
         </div>
         <div class = "form-group">
-            <button class="btn btn-primary btn-block create-account" formaction= LoginServlet type="submit" value = "1">Вход в аккаунт</button>
+            <button class="btn btn-primary btn-block create-account"  formaction= MainServlet type="submit" value = "1">Вход в аккаунт</button>
         </div>
         <div class = "form-group">
             <button class="btn btn-primary btn-block reg-account" formaction = "register.jsp"  type="submit" value = "2">Регистрация</button>

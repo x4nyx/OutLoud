@@ -7,7 +7,7 @@
 <body>
 <style>
     html {
-        background-color:#214c84;
+        background-image: url("img/goslyngregister.jpg");
         background-blend-mode:overlay;
         display:flex;
         align-items:center;
@@ -67,6 +67,7 @@
 </style>
 <div class="registration-cssave">
     <form action= MainServlet method = get>
+        <img src="img/logo.png" style="width: 80px; margin-left: 28%;" alt="Outloud">
         <h3 class="text-center">Регистрация</h3>
         <div class="form-group">
             <input class="form-control item" type="text" name="login" maxlength="15" minlength="4" pattern="^[a-zA-Z0-9_.-]*$" id="username" placeholder="Логин" required>

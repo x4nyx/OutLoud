@@ -16,7 +16,7 @@ public class MainServlet extends HttpServlet {
     private static Logger logger = LogManager.getLogger(MainServlet.class);
     public static final String DB_URL = "jdbc:mysql://localhost:3306/OutLoud";
     public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "2281488qQ";
+    public static final String DB_PASSWORD = "1234567890";
     public static final String DB_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
     public static final int DB_POOL_START_SIZE = 1;
     public static final int DB_POOL_MAX_SIZE = 10;

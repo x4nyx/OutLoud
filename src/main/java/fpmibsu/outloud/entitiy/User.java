@@ -9,6 +9,15 @@ public class User implements Entity {
     private Type role;
     private Boolean isConfirmed;
 
+    public User(Integer id, String name, String login, String password, String role, Integer isConfirmed) {
+        this.id = id;
+        this.name = name;
+        this.login = login;
+        this.password = password;
+        this.role = Type.fromString(role);
+        this.isConfirmed = isConfirmed == 1;
+    }
+
     public User() {}
     public User(User toCopy) {
         this.id = toCopy.getId();
@@ -71,6 +80,14 @@ public class User implements Entity {
             return 1;
         } else {
             return 0;
+        }
+    }
+
+    public static String userString(User user) {
+        if(user == null) {
+            return "";
+        } else {
+            return user.toString();
         }
     }
 

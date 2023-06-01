@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.GenericServlet;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +20,8 @@ public class LoginAction extends Act{
     public String n;
     public String password;
     private static Logger logger = LogManager.getLogger(LoginAction.class);
+
+
     public void updatedata(HttpServletRequest req){
          n = req.getParameter("username");
          password = req.getParameter("Пароль");
@@ -31,7 +34,7 @@ public class LoginAction extends Act{
             User user;
             user = userService.validate(n, password);
             if (user != null){
-                logger.info("User is successfully logged");
+                logger.log(Level.INFO, "User is successfully logged");
                 res.sendRedirect("succsess.jsp");
             }
             else {

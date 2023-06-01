@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 public class MainFilter implements Filter {
-    private static Logger logger = LogManager.getLogger(MainFilter.class);
+    //private static Logger logger = LogManager.getLogger(MainFilter.class);
     private Act action = null;
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}
@@ -24,7 +24,7 @@ public class MainFilter implements Filter {
         HttpServletResponse res  = (HttpServletResponse)servletResponse;
         try {
             String actionStr = req.getRequestURI().replace(req.getContextPath() + '/', "");
-            logger.info(actionStr);
+            //logger.info(actionStr);
             switch (actionStr) {
                 case "index.jsp", "" -> {
                      action = new LoginAction();
